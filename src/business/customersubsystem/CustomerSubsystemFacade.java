@@ -27,6 +27,7 @@ import business.externalinterfaces.ShoppingCartSubsystem;
 import business.ordersubsystem.OrderSubsystemFacade;
 import business.shoppingcartsubsystem.ShoppingCartSubsystemFacade;
 import business.util.DataUtil;
+import presentation.data.SessionCache;
 
 public class CustomerSubsystemFacade implements CustomerSubsystem {
 	private static final Logger LOG =
@@ -64,6 +65,7 @@ public class CustomerSubsystemFacade implements CustomerSubsystem {
 		//sets any live cart items obtained before login into the ShoppingCartSubsystem's live cart
 		shoppingCartSubsystem.getLiveCart().setCartItems(cartItems);
 		loadOrderData();
+		SessionCache.getInstance().add(SessionCache.CUSTOMER, this);
 	}
 
 	void loadCustomerProfile(int id, boolean isAdmin) throws BackendException {
@@ -77,27 +79,37 @@ public class CustomerSubsystemFacade implements CustomerSubsystem {
 	}
 
 	void loadDefaultShipAddress() throws BackendException {
-		// implement
-		LOG.warning("Method CustomerSubsystemFacade.loadDefaultShipAddress has not been implemented.");
+		try {
+			DbClassAddress dbClass = new DbClassAddress();
+			defaultShipAddress = dbClass.readDefaultShipAddress(customerProfile);
+		} catch(DatabaseException e) {
+			throw new BackendException(e);
+		}
 	}
 
 	void loadDefaultBillAddress() throws BackendException {
-		// implement
-		LOG.warning("Method CustomerSubsystemFacade.loadDefaultBillAddress has not been implemented.");
+		try {
+			DbClassAddress dbClass = new DbClassAddress();
+			defaultBillAddress = dbClass.readDefaultBillAddress(customerProfile);
+		} catch(DatabaseException e) {
+			throw new BackendException(e);
+		}
 	}
 
 	void loadDefaultPaymentInfo() throws BackendException {
-		// implement
-		LOG.warning("Method CustomerSubsystemFacade.loadDefaultPaymentInfo has not been implemented.");
+		try {
+			DbClassCreditCard dbClass = new DbClassCreditCard();
+			defaultPaymentInfo = dbClass.readDefaultPaymentInfo(customerProfile);
+		} catch(DatabaseException e) {
+			throw new BackendException(e);
+		}
 	}
 
 	void loadOrderData() throws BackendException {
-		//implement
 		// retrieve the order history for the customer and store here
 		orderSubsystem = new OrderSubsystemFacade(customerProfile);
-		// orderHistory = orderSubsystem.getOrderHistory();
-		LOG.warning("Method CustomerSubsystemFacade.loadOrderData has not been implemented.");
-
+		orderHistory = orderSubsystem.getOrderHistory();
+		SessionCache.getInstance().add(SessionCache.CUSTOMER_ORDER_HISTORY, orderHistory);
 	}
 
 	/**

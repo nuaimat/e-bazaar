@@ -34,7 +34,8 @@ class DbClassOrder implements DbClass {
     
     private Type queryType;
     
-    private String orderItemsQuery = "SELECT * FROM OrderItem WHERE orderid = ?";
+    private String orderItemsQuery = "SELECT o.*,p.* FROM OrderItem o" +
+			"    inner JOIN ProductsDb. Product p on (o.productid = p.productid) WHERE orderid = ?";
     private String orderIdsQuery = "SELECT orderid FROM Ord WHERE custid = ?";
     private String orderDataQuery = "SELECT orderdate, totalpriceamount FROM Ord WHERE orderid = ?";
     private String submitOrderQuery = "INSERT into Ord "+
@@ -66,7 +67,8 @@ class DbClassOrder implements DbClass {
     	queryType = Type.GET_ORDER_DATA;
     	orderDataParams = new Object[]{orderId};
     	orderDataTypes = new int[]{Types.INTEGER};
-    	dataAccessSS.atomicRead(this);      	
+    	dataAccessSS.atomicRead(this);
+		orderData.setOrderId(orderId);
         return orderData;
     }
     
@@ -128,15 +130,27 @@ class DbClassOrder implements DbClass {
 	}
    
     public List<OrderItem> getOrderItems(Integer orderId) throws DatabaseException {
-    	//implement 
-    	LOG.warning("Method getOrderItems(Integer orderId) has not been implmeented");
-        orderItems = new ArrayList<>();
+		queryType = Type.GET_ORDER_ITEMS;
+		orderItemsParams = new Object[]{orderId};
+		orderItemsTypes = new int[]{Types.INTEGER};
+		dataAccessSS.atomicRead(this);
         return Collections.unmodifiableList(orderItems);        
     }
    
     private void populateOrderItems(ResultSet rs) throws DatabaseException {
-    	LOG.warning("Method populateOrderItems(ResultSet) still needs to be implemented");
-       //implement
+		orderItems = new ArrayList<>();
+		try {
+			while(rs.next()){
+				String name = rs.getString("productname");
+				int quantity = rs.getInt("quantity");
+				double price = rs.getDouble("totalprice");
+				OrderItem item = new OrderItemImpl(name, quantity, price);
+				orderItems.add(item);
+			}
+		}
+		catch(SQLException e){
+			throw new DatabaseException(e);
+		}
     }
     
     private void populateOrderIds(ResultSet resultSet) throws DatabaseException {
@@ -151,12 +165,19 @@ class DbClassOrder implements DbClass {
         }
     }
     
-    private void populateOrderData(ResultSet resultSet) throws DatabaseException { 
-    	//implement
-    	LOG.warning("Method populateOrderData(ResultSet resultSet) still needs to be implemented");
+    private void populateOrderData(ResultSet rs) throws DatabaseException {
+		try {
+			while(rs.next()){
+				orderData = new OrderImpl();
+				orderData.setDate(Convert.localDateForString(rs.getString("orderdate")));
+			}
+		} catch(SQLException e){
+			throw new DatabaseException(e);
+		}
     }    
  
     public void populateEntity(ResultSet resultSet) throws DatabaseException {
+		LOG.warning("populating entity " + queryType + " with query: " + this.getQuery());
     	switch(queryType) {
 	    	case GET_ORDER_ITEMS:
 	    		populateOrderItems(resultSet);

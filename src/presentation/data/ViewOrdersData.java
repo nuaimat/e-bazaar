@@ -1,5 +1,9 @@
 package presentation.data;
 
+import business.customersubsystem.CustomerSubsystemFacade;
+import business.externalinterfaces.Order;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import java.util.logging.Logger;
@@ -17,7 +21,16 @@ public enum ViewOrdersData {
 	}
 	
 	public List<OrderPres> getOrders() {
-		LOG.warning("ViewOrdersData method getOrders() has not been implemented.");
-		return DefaultData.ALL_ORDERS;
+		List<Order> orders = (List<Order>) SessionCache.getInstance().get(SessionCache.CUSTOMER_ORDER_HISTORY);
+		List<OrderPres> orderPresList = new ArrayList<>();
+		if(orders != null && orders.size() > 0 ){
+			for(Order o:orders){
+				OrderPres orderPres = new OrderPres();
+				orderPres.setOrder(o);
+				orderPresList.add(orderPres);
+			}
+		}
+		
+		return orderPresList;
 	}
 }

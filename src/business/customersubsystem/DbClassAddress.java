@@ -193,11 +193,13 @@ class DbClassAddress implements DbClass, DbClassAddressForTest {
     void populateDefaultShipAddress(ResultSet rs) throws DatabaseException {
     	LOG.warning("Method populateDefaultShipAddress(ResultSet rs) not yet implemented" );
        //implement
+		// TODO implement
         
     }
     void populateDefaultBillAddress(ResultSet rs) throws DatabaseException {
     	LOG.warning("Method populateDefaultBillAddress(ResultSet rs) not yet implemented" );
-        //implement    
+        //implement
+		// TODO implement
     }
 	
 	

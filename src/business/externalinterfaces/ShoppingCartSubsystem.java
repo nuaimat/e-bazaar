@@ -52,9 +52,9 @@ public interface ShoppingCartSubsystem {
 
 
 
-//	
-//	/** 
-//	 * Empties the live cart. This needs to be done after an order has been submitted 
+//
+//	/**
+//	 * Empties the live cart. This needs to be done after an order has been submitted
 //	 */
 //	public void clearLiveCart();
 
@@ -63,12 +63,12 @@ public interface ShoppingCartSubsystem {
 //	 * and the CartItemsWindow is about to be displayed). the method returns the list of cart items currently
 //	 * stored in the live cart, sitting in the shopping cart subsystem facade */
 //	public List<CartItem> getLiveCartItems();
-//	
+//
 
-//	
-//	
-//	
-//	/** 
+//
+//
+//
+//	/**
 //	 * Used when user choose the option to 'retrieve saved cart' -- which
 //	 * requires that the customer's saved cart be stored in the live cart
 //	 * in the shopping cart subsystem facade
@@ -83,10 +83,10 @@ public interface ShoppingCartSubsystem {
 //       *  clicking "Proceed to Checkout" -- at that time
 //       *  rules concerning validity of shopping cart are run
 //       *  (for instance, user may not have an empty cart)
-//       */	
+//       */
 //	public void runShoppingCartRules() throws RuleException, BusinessException;
 //
-//	/** 
+//	/**
 //       *  Invoked when user attempts to submit final order
 //       *  -- rules are run to check validity of the order
 //       *  (for example, quantity available for each product order

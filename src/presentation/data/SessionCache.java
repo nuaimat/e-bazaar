@@ -26,6 +26,7 @@ public class SessionCache {
 	public static final String CUSTOMER = "Customer";
 	public static final String SHOP_CART = "Shopping Cart";
     public static final String LOGGED_IN = "LoggedIn";
+    public static final String CUSTOMER_ORDER_HISTORY = "Order History";
     
     //public interface
     public static SessionCache getInstance() {

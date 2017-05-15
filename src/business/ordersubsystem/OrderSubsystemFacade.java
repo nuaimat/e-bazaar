@@ -30,9 +30,22 @@ public class OrderSubsystemFacade implements OrderSubsystem {
 	 *  into the order.
 	 */
     public List<Order> getOrderHistory() throws BackendException {
-    	//implement
-    	LOG.warning("Method getOrderHistory() still needs to be implemented");
-    	return new ArrayList<Order>();
+        List<Order> res = new ArrayList<Order>();
+        DbClassOrder dbClass = new DbClassOrder();
+        try {
+            List<Integer> previousOrdersIds = getAllOrderIds();
+            for(Integer id:previousOrdersIds){
+                Order order = dbClass.getOrderData(id);
+
+                DbClassOrder dbClassOrder = new DbClassOrder();
+                order.setOrderItems(dbClassOrder.getOrderItems(order.getOrderId()));
+                res.add(order);
+            }
+
+        } catch (DatabaseException e) {
+            throw new BackendException(e);
+        }
+    	return res;
     }
     
     public void submitOrder(ShoppingCart cart) throws BackendException {

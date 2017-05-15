@@ -57,7 +57,7 @@ public class OrdersWindow extends Stage implements MessageableWindow {
 		HBox labelHbox = createTopLabel();
 		
 		//set up table
-        TableColumn<OrderPres, String> orderIDCol = 
+        TableColumn<OrderPres, String> orderIDCol =
         		TableUtil.makeTableColumn(new OrderPres(), 
         				"Order ID", "orderIdProperty", 80);
         TableColumn<OrderPres, String> dateCol = 
