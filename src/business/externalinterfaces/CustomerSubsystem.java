@@ -84,49 +84,49 @@ public interface CustomerSubsystem {
      * to read current user's order history (not used during login process)
      */
     public List<Order> getOrderHistory();  
-//    
-//    
-//    
-//    
-//    
-//    
-//    /** 
-//     *  Stores address as shipping address in this customer's shopping cart.
-//     *  Called during checkout use case. 
-//	 */
-//    public void setShippingAddressInCart(Address addr);
-//    
-//    /** 
-//     * Stores address as billing address in this customer's shopping cart 
-//   *  Called during checkout use case. 
-//	 */
-//    public void setBillingAddressInCart(Address addr);
-//    
-//    /** Stores credit card in this customer's shopping cart 
-//     *  Called during checkout use case.     
-//      */
-//    public void setPaymentInfoInCart(CreditCard cc);
-//    
-//    
-//    /** 
-//     *  Called when user submits final order -- customer sends its shopping cart to order subsystem
-//	 *  and order subsystem extracts items from shopping cart and prepares order
-//	 */
-//    public void submitOrder() throws BackendException;
-//    
-//    /**
-//     * After an order is submitted, the list of orders cached in CustomerSubsystemFacade
-//     * will be out of date; this method should cause order data to be reloaded
-//     */
-//    public void refreshAfterSubmit() throws BackendException;
-//       
-//  /**
-//	 * Saves shopping cart to database
-//	 */
-//    public void saveShoppingCart() throws BackendException;
-//		
-//   
-//
+
+
+
+
+
+
+    /**
+     *  Stores address as shipping address in this customer's shopping cart.
+     *  Called during checkout use case.
+	 */
+    public void setShippingAddressInCart(Address addr);
+
+    /**
+     * Stores address as billing address in this customer's shopping cart
+   *  Called during checkout use case.
+	 */
+    public void setBillingAddressInCart(Address addr);
+
+    /** Stores credit card in this customer's shopping cart
+     *  Called during checkout use case.
+      */
+    public void setPaymentInfoInCart(CreditCard cc);
+
+
+    /**
+     *  Called when user submits final order -- customer sends its shopping cart to order subsystem
+	 *  and order subsystem extracts items from shopping cart and prepares order
+	 */
+    public void submitOrder() throws BackendException;
+
+    /**
+     * After an order is submitted, the list of orders cached in CustomerSubsystemFacade
+     * will be out of date; this method should cause order data to be reloaded
+     */
+    public void refreshAfterSubmit() throws BackendException;
+
+  /**
+	 * Saves shopping cart to database
+	 */
+    public void saveShoppingCart() throws BackendException;
+
+
+
 
 
     //TESTING

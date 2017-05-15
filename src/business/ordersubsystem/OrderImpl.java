@@ -63,38 +63,34 @@ public class OrderImpl implements Order {
 
 	@Override
 	public Address getShipAddress() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.shipAddress;
 	}
 
 	@Override
 	public Address getBillAddress() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.billAddress;
 	}
 
 	@Override
 	public CreditCard getPaymentInfo() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.creditCard;
 	}
 
-//	@Override
-//	public void setShipAddress(Address add) {
-//		// TODO Auto-generated method stub
-//		
-//	}
-//
-//	@Override
-//	public void setBillAddress(Address add) {
-//		// TODO Auto-generated method stub
-//		
-//	}
-//
-//	@Override
-//	public void setPaymentInfo(CreditCard cc) {
-//		// TODO Auto-generated method stub
-//		
-//	}
-//	
+	@Override
+	public void setShipAddress(Address add) {
+		this.shipAddress = add;
+
+	}
+
+	@Override
+	public void setBillAddress(Address add) {
+		this.billAddress = add;
+	}
+
+	@Override
+	public void setPaymentInfo(CreditCard cc) {
+		this.creditCard = cc;
+
+	}
+
 }

@@ -239,6 +239,43 @@ public class CustomerSubsystemFacade implements CustomerSubsystem {
 		return orderHistory;
 	}
 
+	@Override
+	public void setShippingAddressInCart(Address addr) {
+		this.getShoppingCart().setShippingAddress(addr);
+	}
+
+	@Override
+	public void setBillingAddressInCart(Address addr) {
+		this.getShoppingCart().setBillingAddress(addr);
+
+	}
+
+	@Override
+	public void setPaymentInfoInCart(CreditCard cc) {
+		this.getShoppingCart().setPaymentInfo(cc);
+	}
+
+	@Override
+	public void submitOrder() throws BackendException {
+		orderSubsystem.submitOrder(this.getShoppingCart().getLiveCart());
+
+	}
+
+	@Override
+	public void refreshAfterSubmit() throws BackendException {
+		// TODO understand what to implement
+		throw new BackendException("Must implement this CustomerSubsystemFacade:refreshAfterSubmit");
+	}
+
+
+	// TODO TODO fix this
+	@Override
+	public void saveShoppingCart() throws BackendException {
+		//shoppingCartSubsystem.saveCart(customerProfile, this.getShoppingCart());
+		LOG.warning("Must implement this CustomerSubsystemFacade:saveShoppingCart");
+	}
+
+
 	/////////////////// For unit testing only ////////////////
 
 	public DbClassAddressForTest getGenericDbClassAddress() {

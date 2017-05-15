@@ -103,9 +103,7 @@ public class ProductSubsystemFacade implements ProductSubsystem {
     
     
 	public int readQuantityAvailable(Product product) throws BackendException {
-		//IMPLEMENT
-		LOG.warning("Method readQuantityAvailable(Product product) has not been implemented");
-		return 2;
+		return product.getQuantityAvail();
 	}
 	
 	public int saveNewCatalog(String catalogName) throws BackendException {
@@ -116,9 +114,41 @@ public class ProductSubsystemFacade implements ProductSubsystem {
     		throw new BackendException(e);
     	}
 	}
-	
-	
-	
-	
-	
+
+	@Override
+	public Catalog getCatalogFromName(String catName) throws BackendException {
+		try {
+			DbClassCatalog dbclass = new DbClassCatalog();
+			return dbclass.readCatalog(getCatalogIdFromName(catName));
+		} catch(DatabaseException e) {
+			throw new BackendException(e);
+		}
+	}
+
+	private int getCatalogIdFromName(String catName) throws BackendException {
+		try {
+			DbClassCatalog dbclass = new DbClassCatalog();
+			TwoKeyHashMap<Integer,String,Catalog> table = dbclass.readCataloguesTable();
+			return table.getFirstKey(catName);
+		} catch(DatabaseException e) {
+			throw new BackendException(e);
+		}
+	}
+
+	@Override
+	public void saveNewProduct(Product product, Catalog catalog) throws BackendException {
+
+	}
+
+	@Override
+	public void deleteProduct(Product product) throws BackendException {
+
+	}
+
+	@Override
+	public void deleteCatalog(Catalog catalog) throws BackendException {
+
+	}
+
+
 }

@@ -4,6 +4,9 @@ import java.sql.ResultSet;
 import java.sql.Types;
 import java.util.logging.Logger;
 
+import business.externalinterfaces.Catalog;
+import business.externalinterfaces.Product;
+import business.util.TwoKeyHashMap;
 import middleware.DbConfigProperties;
 import middleware.dataaccess.DataAccessSubsystemFacade;
 import middleware.exceptions.DatabaseException;
@@ -18,7 +21,9 @@ import middleware.externalinterfaces.DbConfigKey;
  *
  */
 class DbClassCatalog implements DbClass {
-	enum Type {INSERT};
+
+
+	enum Type {LOAD_CATALOG_TABLE, INSERT, READ_CATALOG, READ_CATALOG_BY_NAME};
 	@SuppressWarnings("unused")
 	private static final Logger LOG = 
 		Logger.getLogger(DbClassCatalog.class.getPackage().getName());
@@ -27,9 +32,16 @@ class DbClassCatalog implements DbClass {
 	
 	private Type queryType;
 	
-	private String insertQuery = "INSERT into CatalogType (catalogname) VALUES(?)"; 
-	private Object[] insertParams;
-	private int[] insertTypes;
+	private String insertQuery = "INSERT into CatalogType (catalogname) VALUES(?)";
+	private String readCatalogByNameQuery = "SELECT * FROM CatalogType WHERE catalogname = '?'";
+	private String readCatalogQuery = "SELECT * FROM CatalogType WHERE catalogid = ?";
+	private String readAllCatalogesQuery = "SELECT * FROM CatalogType";
+
+	private Object[] insertParams, loadCatalogTableParams, readCatalogParams;
+	private int[] insertTypes, loadCatalogTableTypes, readCatalogTypes;
+	private static TwoKeyHashMap<Integer, String, Catalog> catalogTable;
+
+	private Catalog catalog;
     
     public int saveNewCatalog(String catalogName) throws DatabaseException {
     	queryType = Type.INSERT;
@@ -49,6 +61,12 @@ class DbClassCatalog implements DbClass {
 		switch(queryType) {
 			case INSERT:
 				return insertQuery;
+			case LOAD_CATALOG_TABLE:
+				return readAllCatalogesQuery;
+			case READ_CATALOG:
+				return readCatalogQuery;
+			case READ_CATALOG_BY_NAME:
+				return readCatalogByNameQuery;
 			default:
 				return null;
 		}
@@ -76,5 +94,37 @@ class DbClassCatalog implements DbClass {
 		// do nothing
 		
 	}
-	
+
+	public TwoKeyHashMap<Integer,String,Catalog> readCataloguesTable()
+			throws DatabaseException {
+		if (catalogTable != null) {
+			return catalogTable.clone();
+		}
+		//catalogTable needs to be populated, so call refresh
+		return refreshCatalogTable();
+
+	}
+
+	private TwoKeyHashMap<Integer, String, Catalog> refreshCatalogTable() throws DatabaseException {
+		queryType = Type.LOAD_CATALOG_TABLE;
+		loadCatalogTableParams = new Object[]{};
+		loadCatalogTableTypes = new int[]{};
+		dataAccessSS.atomicRead(this);
+
+		// Return a clone since productTable must not be corrupted
+		return catalogTable.clone();
+	}
+
+	public Catalog readCatalog(int catalogId)
+			throws DatabaseException {
+		if (catalogTable != null && catalogTable.isAFirstKey(catalogId)) {
+			return catalogTable.getValWithFirstKey(catalogId);
+		}
+		queryType = Type.READ_CATALOG;
+		readCatalogParams = new Object[] {catalogId};
+		readCatalogTypes = new int[] {Types.INTEGER};
+		dataAccessSS.atomicRead(this);
+		return catalog;
+	}
+
 }
