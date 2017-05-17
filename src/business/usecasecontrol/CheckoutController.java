@@ -51,7 +51,7 @@ public class CheckoutController  {
 	 *  Credit Verification System 
 	 */
 	public void verifyCreditCard(CustomerSubsystem cust) throws BusinessException {
-		//implement
+		cust.checkCreditCard();
 	}
 	
 	public void saveNewAddress(CustomerSubsystem cust, Address addr) throws BackendException {		
