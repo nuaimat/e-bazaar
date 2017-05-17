@@ -17,6 +17,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import presentation.control.BrowseSelectUIControl;
 import presentation.gui.GuiConstants;
+import presentation.util.CacheReader;
 
 public enum BrowseSelectData  {
 	INSTANCE;
@@ -138,7 +139,8 @@ public enum BrowseSelectData  {
 		 SessionCache session = SessionCache.getInstance();
 	        ShoppingCartSubsystem cachedCart 
 	           = (ShoppingCartSubsystem)session.get(SessionCache.SHOP_CART);
-	        CustomerSubsystem cust = (CustomerSubsystem)session.get(SessionCache.CUSTOMER);
+
+	        CustomerSubsystem cust = (CustomerSubsystem) CacheReader.readCustomer();
 	        
 	        //Return value is not null
 	        ShoppingCartSubsystem retVal =

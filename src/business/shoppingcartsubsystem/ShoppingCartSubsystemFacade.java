@@ -6,12 +6,9 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import business.exceptions.BackendException;
-import business.externalinterfaces.Address;
-import business.externalinterfaces.CartItem;
-import business.externalinterfaces.CreditCard;
-import business.externalinterfaces.CustomerProfile;
-import business.externalinterfaces.ShoppingCart;
-import business.externalinterfaces.ShoppingCartSubsystem;
+import business.exceptions.BusinessException;
+import business.exceptions.RuleException;
+import business.externalinterfaces.*;
 import middleware.exceptions.DatabaseException;
 import presentation.data.CartItemPres;
 import presentation.data.DefaultData;
@@ -57,8 +54,15 @@ public class ShoppingCartSubsystemFacade implements ShoppingCartSubsystem {
 		List<CartItem> itemsList = new ArrayList<CartItem>();
 		//popluate this list
 		savedCart = new ShoppingCartImpl(itemsList);
-		
-		
+
+		if(customerProfile != null){
+			DbClassShoppingCart dbClass = new DbClassShoppingCart();
+			try {
+				savedCart = dbClass.retrieveSavedCart(customerProfile);
+			} catch (DatabaseException e) {
+				savedCart = new ShoppingCartImpl(itemsList);
+			}
+		}
 
 	}
 	
@@ -121,5 +125,16 @@ public class ShoppingCartSubsystemFacade implements ShoppingCartSubsystem {
 		return liveCart.getCartItems();
 	}
 
+	@Override
+	public void runShoppingCartRules() throws RuleException, BusinessException {
+		Rules rulesShoppingCartObject = new RulesShoppingCart(this.liveCart);
+		rulesShoppingCartObject.runRules();
+	}
+
+	@Override
+	public void runFinalOrderRules() throws RuleException, BusinessException {
+		Rules rulesShoppingCartObject = new RulesFinalOrder(this.liveCart);
+		rulesShoppingCartObject.runRules();
+	}
 
 }

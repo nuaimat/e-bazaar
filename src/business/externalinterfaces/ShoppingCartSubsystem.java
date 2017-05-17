@@ -4,6 +4,8 @@ package business.externalinterfaces;
 import java.util.List;
 
 import business.exceptions.BackendException;
+import business.exceptions.BusinessException;
+import business.exceptions.RuleException;
 
 
 public interface ShoppingCartSubsystem {
@@ -83,7 +85,7 @@ public interface ShoppingCartSubsystem {
 //       *  rules concerning validity of shopping cart are run
 //       *  (for instance, user may not have an empty cart)
 //       */
-//	public void runShoppingCartRules() throws RuleException, BusinessException;
+public void runShoppingCartRules() throws RuleException, BusinessException;
 //
 //	/**
 //       *  Invoked when user attempts to submit final order
@@ -91,5 +93,5 @@ public interface ShoppingCartSubsystem {
 //       *  (for example, quantity available for each product order
 //       *  will be checked against quantity requested)
 //       */
-//   public void runFinalOrderRules() throws RuleException, BusinessException;
+public void runFinalOrderRules() throws RuleException, BusinessException;
 }

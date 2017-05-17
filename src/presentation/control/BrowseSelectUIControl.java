@@ -160,6 +160,8 @@ public enum BrowseSelectUIControl {
 	private class CatalogsToCartHandler implements EventHandler<ActionEvent> {
 		public void handle(ActionEvent evt) {
 			ShoppingCartWindow.INSTANCE.show();
+			ShoppingCartWindow.INSTANCE.displayError("");
+			ShoppingCartWindow.INSTANCE.displayInfo("");
 			CatalogListWindow.getInstance().hide();
 		}
 	}

@@ -78,22 +78,23 @@ public enum CheckoutUIControl {
 		}
 		@Override
 		public void handle(ActionEvent evt) {
-			ShoppingCartWindow.INSTANCE.clearMessages();
-			ShoppingCartWindow.INSTANCE.setTableAccessByRow();
-			ShoppingCartWindow.INSTANCE.hide();
-			
 			boolean rulesOk = true;
 			/* check that cart is not empty before going to next screen */	
 			
-//			try {
-//				usecaseControl.runShoppingCartRules();
-//			} catch (RuleException e) {
-//				//handle
-//			} catch (BusinessException e) {
-//				//handle
-//			}
+			try {
+				controller.runShoppingCartRules( BrowseSelectData.INSTANCE.obtainCurrentShoppingCartSubsystem() );
+			} catch (RuleException e) {
+				rulesOk = false;
+
+			} catch (BusinessException e) {
+				rulesOk = false;
+			}
 	
 			if (rulesOk) {
+				ShoppingCartWindow.INSTANCE.clearMessages();
+				ShoppingCartWindow.INSTANCE.setTableAccessByRow();
+				ShoppingCartWindow.INSTANCE.hide();
+
 				boolean isLoggedIn = CacheReader.readLoggedIn();
 				//do not create instance of ShippingBillingWindow here
 				if (!isLoggedIn) {
@@ -103,6 +104,8 @@ public enum CheckoutUIControl {
 				} else {
 					doUpdate();
 				}			
+			} else {
+				ShoppingCartWindow.INSTANCE.displayError("Shopping cart rules failed. check if quantity exceeded.");
 			}
 
 		}
@@ -347,15 +350,29 @@ public enum CheckoutUIControl {
 	private class SubmitHandler implements EventHandler<ActionEvent> {
 		@Override
 		public void handle(ActionEvent evt) {
+			boolean rulesOk = true;
+
 			try {
-				controller.submitFinalOrder();
-			} catch (BackendException e) {
-				e.printStackTrace();
+				controller.runFinalOrderRules(BrowseSelectData.INSTANCE.obtainCurrentShoppingCartSubsystem());
+			} catch (BusinessException e) {
+				rulesOk = false;
+				LOG.warning(e.getMessage());
 			}
-			orderCompleteWindow = new OrderCompleteWindow();
-			orderCompleteWindow.show();
-			finalOrderWindow.clearMessages();
-			finalOrderWindow.hide();
+
+			if(rulesOk){
+				try {
+					controller.submitFinalOrder();
+				} catch (BackendException e) {
+					e.printStackTrace();
+				}
+				orderCompleteWindow = new OrderCompleteWindow();
+				orderCompleteWindow.show();
+				finalOrderWindow.clearMessages();
+				finalOrderWindow.hide();
+			} else {
+				finalOrderWindow.displayError("Final order rules failed.");
+			}
+
 		}
 
 	}
