@@ -146,7 +146,7 @@ public class ProductSubsystemFacade implements ProductSubsystem {
 
 	@Override
 	public void deleteCatalog(Catalog catalog) throws BackendException {
-
+		// do nothing for now
 	}
 
 

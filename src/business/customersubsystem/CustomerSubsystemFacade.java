@@ -276,16 +276,13 @@ public class CustomerSubsystemFacade implements CustomerSubsystem {
 
 	@Override
 	public void refreshAfterSubmit() throws BackendException {
-		// TODO understand what to implement -- just read javadoc in the parent interface
-		throw new BackendException("Must implement this CustomerSubsystemFacade:refreshAfterSubmit");
+		loadOrderData();
 	}
 
 
-	// TODO TODO fix this
 	@Override
 	public void saveShoppingCart() throws BackendException {
-		//shoppingCartSubsystem.saveCart(customerProfile, this.getShoppingCart());
-		LOG.warning("Must implement this CustomerSubsystemFacade:saveShoppingCart");
+		shoppingCartSubsystem.saveLiveCart();
 	}
 
 

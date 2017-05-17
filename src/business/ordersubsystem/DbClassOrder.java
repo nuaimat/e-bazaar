@@ -136,9 +136,7 @@ class DbClassOrder implements DbClass {
         queryType=Type.SUBMIT_ORDER_ITEM;
         LOG.warning("Method submitOrderItem(OrderItem item) in DbClassOrder has not been implemented.");
 
-		//orderid, productid, quantity, totalprice, shipmentcost, taxamount
-		// TODO understand how to get shipCost
-		// TODO understand how to get tax amount
+
         submitOrderItemParams = new Object[]{
 				item.getOrderId(),
 				item.getProductId(),
