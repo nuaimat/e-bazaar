@@ -72,6 +72,7 @@ public class LoginUIControl {
     		} else {
     			cache.add(SessionCache.LOGGED_IN, Boolean.FALSE);
     			cache.remove(SessionCache.CUSTOMER);
+				cache.remove(SessionCache.CUSTOMER_ORDER_HISTORY);
     			controller.displayInfo("You have successfully logged out.");
     		}
     	}

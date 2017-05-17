@@ -1,16 +1,18 @@
 package business.ordersubsystem;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import business.externalinterfaces.*;
+import business.shoppingcartsubsystem.ShoppingCartSubsystemFacade;
+import business.util.Convert;
 import middleware.exceptions.DatabaseException;
 import business.exceptions.BackendException;
-import business.externalinterfaces.CustomerProfile;
-import business.externalinterfaces.Order;
-import business.externalinterfaces.OrderItem;
-import business.externalinterfaces.OrderSubsystem;
-import business.externalinterfaces.ShoppingCart;
+import presentation.data.CartItemPres;
+import presentation.data.OrderPres;
+import presentation.util.CacheReader;
 
 public class OrderSubsystemFacade implements OrderSubsystem {
 	private static final Logger LOG = 
@@ -49,23 +51,53 @@ public class OrderSubsystemFacade implements OrderSubsystem {
     }
     
     public void submitOrder(ShoppingCart cart) throws BackendException {
-    	//implement
-    	LOG.warning("The method submitOrder(ShoppingCart cart) in OrderSubsystemFacade has not been implemented");
+
+        DbClassOrder dbClass = new DbClassOrder();
+        Order o = createOrder(0, Convert.localDateAsString(LocalDate.now()), ""+0);
+
+        List<OrderItem> orderItemList = new ArrayList<>();
+        for(CartItem cartItem:cart.getCartItems()){
+            OrderItem oi = createOrderItem(
+                    cartItem.getProductid(), o.getOrderId(), cartItem.getQuantity(),
+                    cartItem.getTotalprice()
+                    );
+            oi.setProductName(cartItem.getProductName());
+            orderItemList.add(oi);
+        }
+        o.setOrderItems(orderItemList);
+        o.setBillAddress(cart.getBillingAddress());
+        o.setShipAddress(cart.getShippingAddress());
+        o.setPaymentInfo(cart.getPaymentInfo());
+
+        try {
+            dbClass.submitOrder(CacheReader.readCustomer().getCustomerProfile(), o );
+        } catch (DatabaseException e) {
+            LOG.warning("OrderSubsystemFacade:submitOrder Exception: " + e.getMessage());
+            throw new BackendException(e);
+        }
     }
 	
 	/** Used whenever an order item needs to be created from outside the order subsystem */
     public static OrderItem createOrderItem(
     		Integer prodId, Integer orderId, String quantityReq, String totalPrice) {
-    	//implement
-        LOG.warning("Method createOrderItem(prodid, orderid, quantity, totalprice) still needs to be implemented");
-    	return null;
+        OrderItemImpl oi = new OrderItemImpl(
+                "",
+                Integer.parseInt(quantityReq),
+                Double.parseDouble(totalPrice)
+        );
+        oi.setProductId(prodId);
+        oi.setOrderId(orderId);
+
+        return oi;
     }
     
     /** to create an Order object from outside the subsystem */
     public static Order createOrder(Integer orderId, String orderDate, String totalPrice) {
-    	//implement
-        LOG.warning("Method  createOrder(Integer orderId, String orderDate, String totalPrice) still needs to be implemented");
-    	return null;
+    	Order o = new OrderImpl();
+        OrderPres orderPres = new OrderPres();
+        o.setOrderId(orderId);
+        o.setDate(Convert.localDateForString(orderDate));
+    	return o;
     }
     
     ///////////// Methods internal to the Order Subsystem -- NOT public

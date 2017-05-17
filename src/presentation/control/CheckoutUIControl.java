@@ -347,6 +347,11 @@ public enum CheckoutUIControl {
 	private class SubmitHandler implements EventHandler<ActionEvent> {
 		@Override
 		public void handle(ActionEvent evt) {
+			try {
+				controller.submitFinalOrder();
+			} catch (BackendException e) {
+				e.printStackTrace();
+			}
 			orderCompleteWindow = new OrderCompleteWindow();
 			orderCompleteWindow.show();
 			finalOrderWindow.clearMessages();

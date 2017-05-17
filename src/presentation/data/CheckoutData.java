@@ -74,20 +74,21 @@ public enum CheckoutData {
 		return GuiConstants.CREDIT_CARD_TYPES;
 	}
 	public Address getDefaultShippingData() {
-		//implement
-		List<String> add = DefaultData.DEFAULT_SHIP_DATA;
-		return CustomerSubsystemFacade.createAddress(add.get(0), add.get(1), 
-				add.get(2), add.get(3), true, false);
+		CustomerSubsystem custSS
+				= (CustomerSubsystem)SessionCache.getInstance().get(SessionCache.CUSTOMER);
+		return custSS.getDefaultShippingAddress();
 	}
 	
 	public Address getDefaultBillingData() {
-		List<String> add =  DefaultData.DEFAULT_BILLING_DATA;
-		return CustomerSubsystemFacade.createAddress(add.get(0), add.get(1), 
-				add.get(2), add.get(3), false, true);
+		CustomerSubsystem custSS
+				= (CustomerSubsystem)SessionCache.getInstance().get(SessionCache.CUSTOMER);
+		return custSS.getDefaultBillingAddress();
 	}
 	
-	public List<String> getDefaultPaymentInfo() {
-		return DefaultData.DEFAULT_PAYMENT_INFO;
+	public CreditCard getDefaultPaymentInfo() {
+		CustomerSubsystem custSS
+				= (CustomerSubsystem)SessionCache.getInstance().get(SessionCache.CUSTOMER);
+		return custSS.getDefaultPaymentInfo();
 	}
 	
 	

@@ -31,7 +31,7 @@ class RulesAddress implements Rules {
 	}	
 	
 	
-	///////////////implementation of interface
+	// interface methods
 	public String getModuleName(){
 		return config.getProperty(RulesConfigKey.ADDRESS_MODULE.getVal());
 	}

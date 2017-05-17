@@ -75,30 +75,16 @@ public class ProductSubsystemFacade implements ProductSubsystem {
    
     @SuppressWarnings("serial")
 	public List<Product> getProductList(Catalog catalog) throws BackendException {
-    	//Uses stub data -- replace with database data
-    	if(catalog.getName().equals("Books")) {
-    		return new ArrayList<Product>() {
-    			{
-    				add(new ProductImpl(catalog, "Messiah Of Dune", LocalDate.of(2000, 11, 11), 20, 15.00));
-    				add(new ProductImpl(catalog, "Gone with the Wind", LocalDate.of(1995, 12, 5), 15, 12.00));
-    				add(new ProductImpl(catalog, "Garden of Rama", LocalDate.of(2005, 1, 1), 5, 18.00));
-    			}
-    		};
-    	} else if(catalog.getName().equals("Clothing")) {
-    		return new ArrayList<Product>() {
-    			{
-    				add(new ProductImpl(catalog, "Pants", LocalDate.of(2000, 11, 1), 20, 15.00));
-    				add(new ProductImpl(catalog, "Skirts", LocalDate.of(1995, 1, 5), 15, 12.00));
-    				add(new ProductImpl(catalog, "T-Shirts", LocalDate.of(2003, 6, 18), 10, 22.00));
-    			}
-    		};
-    	} else {
-    		return new ArrayList<Product>() {
-    			{
-    				add(new ProductImpl(catalog, "Test", LocalDate.now(), 1, 1.00));
-    			}
-    		};
-    	}
+		DbClassProduct dbClassProduct = new DbClassProduct();
+		List<Product> ret;
+		try {
+			ret = dbClassProduct.readProductList(catalog);
+		} catch (DatabaseException e) {
+			LOG.warning("ProductSubsystemFacade.getProductList: exception" + e.getMessage());
+			return new ArrayList<>();
+		}
+
+		return ret;
     }
     
     
@@ -137,12 +123,25 @@ public class ProductSubsystemFacade implements ProductSubsystem {
 
 	@Override
 	public void saveNewProduct(Product product, Catalog catalog) throws BackendException {
+		try {
+			DbClassProduct dbclass = new DbClassProduct();
+			dbclass.saveNewProduct(product, catalog);
+			return;
+		} catch(DatabaseException e) {
+			throw new BackendException(e);
+		}
 
 	}
 
 	@Override
 	public void deleteProduct(Product product) throws BackendException {
-
+		try {
+			DbClassProduct dbclass = new DbClassProduct();
+			dbclass.deleteProduct(product.getProductId());
+			return;
+		} catch(DatabaseException e) {
+			throw new BackendException(e);
+		}
 	}
 
 	@Override

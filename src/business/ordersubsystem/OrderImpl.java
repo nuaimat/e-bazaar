@@ -16,7 +16,7 @@ public class OrderImpl implements Order {
 	private LocalDate date;
 	private Address shipAddress;
 	private Address billAddress;
-	private CreditCard creditCard;  
+	private CreditCard creditCard;
 	public OrderImpl() {
 	}
 
@@ -92,5 +92,6 @@ public class OrderImpl implements Order {
 		this.creditCard = cc;
 
 	}
+
 
 }

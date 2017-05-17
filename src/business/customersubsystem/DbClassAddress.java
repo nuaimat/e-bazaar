@@ -75,15 +75,18 @@ class DbClassAddress implements DbClass, DbClassAddressForTest {
     }
     
     AddressImpl readDefaultShipAddress(CustomerProfile custProfile) throws DatabaseException {
-    	return new AddressImpl("test street", "testcity", 
-    			"test state", "11111", 
-			true, false);
-    	//implement     
+    	queryType = Type.READ_DEFAULT_SHIP;
+		readDefaultShipParams = new Object[]{custProfile.getCustId()};
+		readDefaultShipTypes = new int[] {Types.INTEGER};
+		dataAccessSS.atomicRead(this);
+		return defaultShipAddress;
     }
     AddressImpl readDefaultBillAddress(CustomerProfile custProfile) throws DatabaseException {
-    	return new AddressImpl("test street", "testcity", 
-    			"test state", "11111", 
-			false, true);
+		queryType = Type.READ_DEFAULT_BILL;
+		readDefaultBillParams = new Object[]{custProfile.getCustId()};
+		readDefaultBillTypes = new int[] {Types.INTEGER};
+		dataAccessSS.atomicRead(this);
+		return defaultBillAddress;
     }   
     public List<Address> readAllAddresses(CustomerProfile custProfile) throws DatabaseException {
     	//this.custProfile = custProfile;
@@ -124,13 +127,13 @@ class DbClassAddress implements DbClass, DbClassAddressForTest {
 	        	return insertParams;
 	        case READ_ALL:
 	        	return readAllParams;
-	        case READ_DEFAULT_BILL: 
+	        case READ_DEFAULT_BILL:
 	        	return readDefaultBillParams;
 	        case READ_DEFAULT_SHIP:
 	        	return readDefaultShipParams;
 	        default :
 	        	return null;
-	    } 
+	    }
     }
     
     @Override
@@ -191,15 +194,53 @@ class DbClassAddress implements DbClass, DbClassAddressForTest {
     }
     
     void populateDefaultShipAddress(ResultSet rs) throws DatabaseException {
-    	LOG.warning("Method populateDefaultShipAddress(ResultSet rs) not yet implemented" );
-       //implement
-		// TODO implement
-        
-    }
+       	if(rs != null){
+			try {
+				while(rs.next()) {
+					defaultShipAddress = new AddressImpl();
+					String str = rs.getString("shipaddress1") +
+							(rs.getString("shipaddress2") != null && rs.getString("shipaddress2").length() > 0 ?" - "+rs.getString("shipaddress2"):"");
+					defaultShipAddress.setStreet(str);
+
+					defaultShipAddress.setCity(rs.getString("shipcity"));
+					defaultShipAddress.setState(rs.getString("shipstate"));
+					defaultShipAddress.setZip(rs.getString("shipzipcode"));
+					boolean isShipping = true;
+					boolean isBilling = false;
+					defaultShipAddress.isShippingAddress(isShipping);
+					defaultShipAddress.isBillingAddress(isBilling);
+
+				}
+			}
+			catch(SQLException e){
+				throw new DatabaseException(e);
+			}
+		}
+
+	}
     void populateDefaultBillAddress(ResultSet rs) throws DatabaseException {
-    	LOG.warning("Method populateDefaultBillAddress(ResultSet rs) not yet implemented" );
-        //implement
-		// TODO implement
+		if(rs != null){
+			try {
+				while(rs.next()) {
+					defaultBillAddress = new AddressImpl();
+					String str = rs.getString("billaddress1") +
+							(rs.getString("billaddress2") != null && rs.getString("billaddress2").length() > 0 ?" - "+rs.getString("billaddress2"):"");
+					defaultBillAddress.setStreet(str);
+
+					defaultBillAddress.setCity(rs.getString("billcity"));
+					defaultBillAddress.setState(rs.getString("billstate"));
+					defaultBillAddress.setZip(rs.getString("billzipcode"));
+					boolean isShipping = false;
+					boolean isBilling = true;
+					defaultBillAddress.isShippingAddress(isShipping);
+					defaultBillAddress.isBillingAddress(isBilling);
+
+				}
+			}
+			catch(SQLException e){
+				throw new DatabaseException(e);
+			}
+		}
     }
 	
 	
@@ -208,8 +249,13 @@ class DbClassAddress implements DbClass, DbClassAddressForTest {
         DbClassAddress dba = new DbClassAddress();
         CustomerProfile cp = new CustomerProfileImpl(1, "John", "Smith");
         try {
-        	System.out.println(dba.readAllAddresses(cp));
-        }
+			List<Address> aa = dba.readAllAddresses(cp);
+        	System.out.println(aa);
+			AddressImpl defba = dba.readDefaultBillAddress(cp);
+			System.out.println(defba);
+			AddressImpl defsa = dba.readDefaultShipAddress(cp);
+			System.out.println(defsa);
+		}
         catch(DatabaseException e){
             e.printStackTrace();
         }

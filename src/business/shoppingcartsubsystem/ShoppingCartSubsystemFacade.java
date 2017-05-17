@@ -22,7 +22,7 @@ public class ShoppingCartSubsystemFacade implements ShoppingCartSubsystem {
 	ShoppingCartImpl savedCart;
 	Integer shopCartId;
 	CustomerProfile customerProfile;
-	Logger log = Logger.getLogger(this.getClass().getPackage().getName());
+	Logger LOG = Logger.getLogger(this.getClass().getPackage().getName());
 
 	// interface methods
 	public void setCustomerProfile(CustomerProfile customerProfile) {
@@ -32,7 +32,18 @@ public class ShoppingCartSubsystemFacade implements ShoppingCartSubsystem {
 	public void makeSavedCartLive() {
 		liveCart = savedCart;
 	}
-	
+
+	@Override
+	public void saveLiveCart() throws BackendException {
+			DbClassShoppingCart dbClass = new DbClassShoppingCart();
+		try {
+			dbClass.saveCart(customerProfile, liveCart);
+		} catch (DatabaseException e) {
+			LOG.warning("ShoppingCartSubsystemFacade:saveLiveCart Exception: " + e.getMessage());
+			throw new BackendException(e);
+		}
+	}
+
 	public ShoppingCart getLiveCart() {
 		return liveCart;
 	}
@@ -100,6 +111,15 @@ public class ShoppingCartSubsystemFacade implements ShoppingCartSubsystem {
 		return new CartItemImpl();
 	}
 
+	@Override
+	public void clearLiveCart() {
+		liveCart.clearCart();
+	}
+
+	@Override
+	public List<CartItem> getLiveCartItems() {
+		return liveCart.getCartItems();
+	}
 
 
 }

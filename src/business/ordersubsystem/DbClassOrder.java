@@ -42,7 +42,9 @@ class DbClassOrder implements DbClass {
         "(custid, shipaddress1, shipcity, shipstate, shipzipcode, billaddress1, billcity, billstate,"+
            "billzipcode, nameoncard,  cardnum,cardtype, expdate, orderdate, totalpriceamount) " +
         "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"; 
-    private String submitOrderItemQuery;
+    private String submitOrderItemQuery = "INSERT into OrderItem" +
+			"(orderid, productid, quantity, totalprice, shipmentcost, taxamount) VALUES " +
+			"(?, ?, ?, ?, ?, ?)";
     Object[] orderItemsParams, orderIdsParams, orderDataParams, submitOrderParams, submitOrderItemParams;
     int[] orderItemsTypes, orderIdsTypes, orderDataTypes, submitOrderTypes, submitOrderItemTypes;
     
@@ -81,8 +83,21 @@ class DbClassOrder implements DbClass {
 	 *  Separate methods are provided 
      */
     void submitOrder(CustomerProfile custProfile, Order order) throws DatabaseException {
-    	LOG.warning("Method submitOrder(CustomerProfile custProfile, Order order) has not beenimplemented");
-    	//implement
+		dataAccessSS.establishConnection(this);
+		dataAccessSS.startTransaction();
+		this.order = order;
+		this.custProfile = custProfile;
+
+		int orderId = submitOrderData();
+		order.setOrderId(orderId);
+
+		for(OrderItem orderItem:order.getOrderItems()){
+			orderItem.setOrderId(order.getOrderId());
+			submitOrderItem(orderItem);
+		}
+
+		dataAccessSS.commit();
+		dataAccessSS.releaseConnection();
     }
 	    
     /** This is part of the general submitOrder method */
@@ -120,13 +135,26 @@ class DbClassOrder implements DbClass {
 	private void submitOrderItem(OrderItem item) throws DatabaseException {
         queryType=Type.SUBMIT_ORDER_ITEM;
         LOG.warning("Method submitOrderItem(OrderItem item) in DbClassOrder has not been implemented.");
-        //implement
-        //submitOrderItemParams = new Object[];
-        //submitOrderItemTypes = new int[];
+
+		//orderid, productid, quantity, totalprice, shipmentcost, taxamount
+		// TODO understand how to get shipCost
+		// TODO understand how to get tax amount
+        submitOrderItemParams = new Object[]{
+				item.getOrderId(),
+				item.getProductId(),
+				item.getQuantity(),
+				item.getTotalPrice(),
+				0.d,
+				item.getTotalPrice() * 0.d /* TAX amount maybe this'll change in the future */
+		};
+        submitOrderItemTypes = new int[]{
+				Types.SMALLINT, Types.INTEGER, Types.INTEGER, Types.DOUBLE,
+				Types.DOUBLE, Types.DOUBLE
+		};
         
         //creation and release of connection handled by submitOrder
         //this should be part of a transaction started in submitOrder
-       //dataAccessSS.insert();        
+       dataAccessSS.insert();
 	}
    
     public List<OrderItem> getOrderItems(Integer orderId) throws DatabaseException {

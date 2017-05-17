@@ -281,7 +281,18 @@ public enum BrowseSelectUIControl {
 		
 		@Override
 		public void handle(ActionEvent evt) {
-			shoppingCartWindow.displayInfo("You need to implement this handler.");	
+			ShoppingCartSubsystem shoppingCartSubsystem = CacheReader.readCustomer().getShoppingCart();
+			boolean savedSuccessfully = true;
+			try {
+				shoppingCartSubsystem.saveLiveCart();
+			} catch (BackendException e) {
+				savedSuccessfully = false;
+				shoppingCartWindow.displayError("Could not save cart, reason: " + e.getMessage() );
+			}
+
+			if(savedSuccessfully){
+				shoppingCartWindow.displayInfo("Cart successfully saved." );
+			}
 		}	
 	}
 	public SaveCartHandler getSaveCartHandler() {

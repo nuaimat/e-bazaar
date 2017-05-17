@@ -43,7 +43,7 @@ class DbClassShoppingCart implements DbClass {
     		"billaddress2, billcity, billstate, billzipcode, nameoncard, " +
     		"expdate,cardtype, cardnum, totalpriceamount, totalshipmentcost, "+ 
     		"totaltaxamount, totalamountcharged) " +
-    		"VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?, ?, ?)";
+    		"VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	private String getTopLevelSavedCartQuery = "SELECT * FROM shopcarttbl WHERE shopcartid = ?";
 			//param is cartId 
 	private String getSavedItemsQuery  = "SELECT * FROM shopcartitem WHERE shopcartid = ?";
@@ -141,19 +141,72 @@ class DbClassShoppingCart implements DbClass {
     //Precondition: shopping cart was stored as instance variable (should be done by saveCart method)
     private int saveCartTopLevel(CustomerProfile custProfile) throws DatabaseException {
     	queryType = Type.SAVE_CART;
-    	saveCartParams = new Object[]{custProfile.getCustId(), cart.getShippingAddress().getStreet(),
-    	  cart.getShippingAddress().getCity(), cart.getShippingAddress().getState(), cart.getShippingAddress().getZip(),
-    	  cart.getBillingAddress().getStreet(), cart.getBillingAddress().getCity(), cart.getBillingAddress().getState(),
-    	  cart.getBillingAddress().getZip(), cart.getPaymentInfo().getNameOnCard(), cart.getPaymentInfo().getExpirationDate(),
-    	  cart.getPaymentInfo().getCardType(), cart.getPaymentInfo().getCardNum(), cart.getTotalPrice(),
-    	  0.00, 0.00, cart.getTotalPrice(), 0.0, 0.0};
-    	saveCartTypes = new int[]{Types.INTEGER, Types.VARCHAR, 
-    			Types.VARCHAR,Types.VARCHAR,Types.VARCHAR,
-    			Types.VARCHAR,Types.VARCHAR,Types.VARCHAR,
-    			Types.VARCHAR,Types.VARCHAR,Types.VARCHAR,
-    			Types.VARCHAR,Types.VARCHAR,Types.DOUBLE,
-    			Types.DOUBLE,Types.DOUBLE,Types.DOUBLE, Types.DOUBLE,Types.DOUBLE};	
-    	return dataAccessSS.insert();
+
+		String shipSt1 = cart.getShippingAddress().getStreet();
+		String shipSt2 = null;
+		if(shipSt1.contains("-")){
+			//String[] parts = shipSt1.split("-");
+			String shipSt1Temp = shipSt1.substring(0, shipSt1.indexOf("-"));
+			shipSt2 = shipSt1.substring(shipSt1Temp.length() + 1).trim();
+			shipSt1 = shipSt1Temp.trim();
+		}
+
+		String billSt1 = cart.getBillingAddress().getStreet();
+		String billSt2 = null;
+		if(billSt1.contains("-")){
+			//String[] parts = shipSt1.split("-");
+			String billSt1Temp = billSt1.substring(0, billSt1.indexOf("-"));
+			billSt2 = billSt1.substring(billSt1Temp.length() + 1).trim();
+			billSt1 = billSt1Temp.trim();
+		}
+
+		saveCartParams = new Object[]{
+				custProfile.getCustId(),
+				shipSt1, shipSt2,
+				cart.getShippingAddress().getCity(),
+				cart.getShippingAddress().getState(),
+				cart.getShippingAddress().getZip(),
+
+				billSt1, billSt2,
+				cart.getBillingAddress().getCity(),
+				cart.getBillingAddress().getState(),
+				cart.getBillingAddress().getZip(),
+
+
+				cart.getPaymentInfo().getNameOnCard(),
+				cart.getPaymentInfo().getExpirationDate(),
+
+				cart.getPaymentInfo().getCardType(),
+				cart.getPaymentInfo().getCardNum(),
+
+				cart.getTotalPrice(),
+				0.00, 0.00,
+				cart.getTotalPrice()
+				};
+
+		saveCartTypes = new int[]{
+				Types.INTEGER,
+				Types.VARCHAR, Types.VARCHAR, /* for shipSt1 and 2 */
+				Types.VARCHAR,
+				Types.VARCHAR,
+				Types.VARCHAR,
+
+				Types.VARCHAR, Types.VARCHAR, /*  for billSt1 and 2 */
+				Types.VARCHAR,
+				Types.VARCHAR,
+				Types.VARCHAR,
+
+				Types.VARCHAR,
+				Types.VARCHAR,
+
+				Types.VARCHAR,
+				Types.VARCHAR,
+
+				Types.DOUBLE,
+				Types.DOUBLE, Types.DOUBLE,
+				Types.DOUBLE
+				};
+		return dataAccessSS.insert();
     }
     
     //Support method for saveCart -- part of another transaction started within saveCart

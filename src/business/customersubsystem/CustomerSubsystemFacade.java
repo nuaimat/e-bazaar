@@ -1,5 +1,6 @@
 package business.customersubsystem;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -270,12 +271,12 @@ public class CustomerSubsystemFacade implements CustomerSubsystem {
 	@Override
 	public void submitOrder() throws BackendException {
 		orderSubsystem.submitOrder(this.getShoppingCart().getLiveCart());
-
+		this.getShoppingCart().setCartItems(new ArrayList<>()); // empty cart items
 	}
 
 	@Override
 	public void refreshAfterSubmit() throws BackendException {
-		// TODO understand what to implement
+		// TODO understand what to implement -- just read javadoc in the parent interface
 		throw new BackendException("Must implement this CustomerSubsystemFacade:refreshAfterSubmit");
 	}
 

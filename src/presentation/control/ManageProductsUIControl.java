@@ -202,12 +202,11 @@ public enum ManageProductsUIControl {
 		    } else if (selectedIndices == null || selectedIndices.isEmpty()) {
 		    	maintainProductsWindow.displayError("Please select a row.");
 		    } else {
+				controller.deleteProduct(selectedItems.get(0).getProduct());
 		    	boolean result 
 		    	    =  ManageProductsData.INSTANCE.removeFromProductList(selectedCatalog, selectedItems);
 			    if(result) {
 			    	table.setItems(ManageProductsData.INSTANCE.getProductsList(selectedCatalog));
-			    	maintainProductsWindow.displayError(
-			    		"Product still needs to be deleted from db!");
 			    } else {
 			    	maintainProductsWindow.displayInfo("No items deleted.");
 			    }
@@ -251,6 +250,30 @@ public enum ManageProductsUIControl {
 			else {
 				//code this as in AddNewCatalogHandler (above)
 				addProductPopup.displayInfo("You need to implement this!");
+
+				try {
+					CatalogPres catPres = ManageProductsData.INSTANCE.getSelectedCatalog();
+					ProductPres p = ManageProductsData.INSTANCE.productPresFromData(
+							catPres.getCatalog(),
+							addProductPopup.getName().getText().trim(),
+							addProductPopup.getManufactureDate().getText().trim(),
+							Integer.parseInt(addProductPopup.getNumAvail().getText().trim()),
+							Double.parseDouble(addProductPopup.getUnitPrice().getText().trim()),
+							addProductPopup.getDescription().getText().trim()
+							);
+					int newProductId = controller.saveNewProduct(p.getProduct() , catPres.getCatalog());
+
+					ManageProductsData.INSTANCE.addToProdList(catPres, p);
+					maintainProductsWindow.setData(ManageProductsData.INSTANCE.getProductsList(catPres));
+
+					TableUtil.refreshTable(maintainProductsWindow.getTable(),
+							ManageProductsData.INSTANCE.getManageProductsSynchronizer());
+
+					addProductPopup.clearMessages();
+					addProductPopup.hide();
+				} catch(BackendException e) {
+					addProductPopup.displayError("A database error has occurred. Check logs and try again later.");
+				}
 			}	
 		}
 		

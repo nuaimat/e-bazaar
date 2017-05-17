@@ -40,7 +40,7 @@ public class DefaultData {
 		}
 	};
 	
-	public static final Product MESSIAH_BOOK 
+	public static final Product MESSIAH_BOOK
 	  = ProductSubsystemFacade.createProduct(BOOKS_CATALOG,"Messiah Of Dune", LocalDate.of(2000, 11, 11), 20, 15.00);
 	public static final Product GONE_BOOK 
 	  =  ProductSubsystemFacade.createProduct(BOOKS_CATALOG,"Gone with the Wind", LocalDate.of(1995, 12, 5), 15, 12.00);
@@ -197,7 +197,7 @@ public class DefaultData {
 		
 								
 	}
-	
+
 	
 	public static void main(String[] args) {
 		

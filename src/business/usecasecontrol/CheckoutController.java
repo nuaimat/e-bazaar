@@ -14,6 +14,7 @@ import business.externalinterfaces.CustomerProfile;
 import business.externalinterfaces.CustomerSubsystem;
 import business.externalinterfaces.ShoppingCartSubsystem;
 import presentation.data.SessionCache;
+import presentation.util.CacheReader;
 
 public class CheckoutController  {
 		
@@ -60,7 +61,9 @@ public class CheckoutController  {
 	
 	/** Asks Customer Subsystem to submit final order */
 	public void submitFinalOrder() throws BackendException {
-		//implement
+		CustomerSubsystem css = CacheReader.readCustomer();
+		css.submitOrder();
+
 	}
 
 

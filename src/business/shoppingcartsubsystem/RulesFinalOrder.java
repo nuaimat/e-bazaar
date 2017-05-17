@@ -23,5 +23,6 @@ import business.rulesubsystem.RulesSubsystemFacade;
  */
 class RulesFinalOrder {//implements Rules {
 //implement
-	
+    // TODO look at RulesShoppingCart
+
 }

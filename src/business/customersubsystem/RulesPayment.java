@@ -25,7 +25,7 @@ class RulesPayment implements Rules {
 	}	
 	
 	
-	///////////////implementation of interface
+	/// interface
 	public String getModuleName(){
 		return config.getProperty(RulesConfigKey.PAYMENT_MODULE.getVal());
 	}

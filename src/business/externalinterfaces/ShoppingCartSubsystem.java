@@ -20,8 +20,7 @@ public interface ShoppingCartSubsystem {
 	public void retrieveSavedCart() throws BackendException ;
 
 	public void setCartItems(List<CartItem> list);
-	public void makeSavedCartLive();
-	
+
 	
 	public ShoppingCart getLiveCart();
 	
@@ -56,13 +55,13 @@ public interface ShoppingCartSubsystem {
 //	/**
 //	 * Empties the live cart. This needs to be done after an order has been submitted
 //	 */
-//	public void clearLiveCart();
+	public void clearLiveCart();
 
 //
 //	/**Used to display items currently in live shopping cart (for instance, when an item is added to cart
 //	 * and the CartItemsWindow is about to be displayed). the method returns the list of cart items currently
 //	 * stored in the live cart, sitting in the shopping cart subsystem facade */
-//	public List<CartItem> getLiveCartItems();
+	public List<CartItem> getLiveCartItems();
 //
 
 //
@@ -73,10 +72,10 @@ public interface ShoppingCartSubsystem {
 //	 * requires that the customer's saved cart be stored in the live cart
 //	 * in the shopping cart subsystem facade
 //	 */
-//	public void makeSavedCartLive();
+	public void makeSavedCartLive();
 //
 //	/** used when user selects the "Save Cart" option on the cart items window */
-//	public void saveLiveCart() throws BackendException;
+	public void saveLiveCart() throws BackendException;
 //
 //      /**
 //       *  Used when a user enters Checkout use case by

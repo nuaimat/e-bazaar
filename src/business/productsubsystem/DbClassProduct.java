@@ -20,7 +20,7 @@ import business.util.Convert;
 import business.util.TwoKeyHashMap;
 
 class DbClassProduct implements DbClass {
-	enum Type {LOAD_PROD_TABLE, READ_PRODUCT, READ_PROD_LIST, SAVE_NEW_PROD};
+	enum Type {LOAD_PROD_TABLE, READ_PRODUCT, READ_PROD_LIST, SAVE_NEW_PROD, DELETE_PRODUCT};
 
 	private static final Logger LOG = Logger.getLogger(DbClassProduct.class
 			.getPackage().getName());
@@ -30,11 +30,15 @@ class DbClassProduct implements DbClass {
 	private String loadProdTableQuery = "SELECT * FROM product";
 	private String readProductQuery = "SELECT * FROM Product WHERE productid = ?";
 	private String readProdListQuery = "SELECT * FROM Product WHERE catalogid = ?";
-	private String saveNewProdQuery = ""; //implement
+	private String saveNewProdQuery = "INSERT into Product" +
+			"(productname, totalquantity, priceperunit, mfgdate, catalogid, description) VALUES " +
+			"(?, ?, ?, ?, ?, ?)";
+	private String deleteProductQuery = "DELETE from Product WHERE productid = ?";
+
 	private Object[] loadProdTableParams, readProductParams, 
-		readProdListParams, saveNewProdParams;
+		readProdListParams, saveNewProdParams, deleteProductParams;
 	private int[] loadProdTableTypes, readProductTypes, readProdListTypes, 
-	    saveNewProdTypes;
+	    saveNewProdTypes, deleteProductTypes;
 	
 	/**
 	 * The productTable matches product ID and product name with
@@ -98,6 +102,15 @@ class DbClassProduct implements DbClass {
 		dataAccessSS.atomicRead(this);
 		return product;
 	}
+
+	public Product deleteProduct(Integer productId)
+			throws DatabaseException {
+		queryType = Type.DELETE_PRODUCT;
+		deleteProductParams = new Object[] {productId};
+		deleteProductTypes = new int[] {Types.INTEGER};
+		dataAccessSS.deleteWithinTransaction(this);
+		return product;
+	}
 	
 
 	/**
@@ -106,10 +119,19 @@ class DbClassProduct implements DbClass {
 	 */
 	public int saveNewProduct(Product product, Catalog catalog) 
 			throws DatabaseException {
-		//implement
-		
-		LOG.warning("Method saveNewProduct in DbClassProduct has not been impemented");
-		return 0;
+		queryType = Type.SAVE_NEW_PROD;
+		//productname, totalquantity, priceperunit, mfgdate, catalogid, description
+		saveNewProdParams = new Object[]{
+				product.getProductName(), product.getQuantityAvail(), product.getUnitPrice(),
+				Convert.localDateAsString(product.getMfgDate()), catalog.getId(), product.getDescription()
+		};
+		saveNewProdTypes = new int[]{
+				Types.VARCHAR, Types.INTEGER, Types.DOUBLE,
+				Types.VARCHAR, Types.SMALLINT, Types.VARCHAR
+		};
+		int newId = dataAccessSS.insertWithinTransaction(this);
+		product.setProductId(newId);
+		return newId;
 	}
 	
 	/// DbClass implemented methods
@@ -130,6 +152,8 @@ class DbClassProduct implements DbClass {
 				return readProdListQuery;
 			case SAVE_NEW_PROD :
 				return saveNewProdQuery;
+			case DELETE_PRODUCT:
+				return deleteProductQuery;
 			default:
 				return null;
 		}
@@ -146,6 +170,8 @@ class DbClassProduct implements DbClass {
 				return readProdListParams;
 			case SAVE_NEW_PROD :
 				return saveNewProdParams;
+			case DELETE_PRODUCT:
+				return deleteProductParams;
 			default:
 				return null;
 		}
@@ -162,6 +188,8 @@ class DbClassProduct implements DbClass {
 			return readProdListTypes;
 		case SAVE_NEW_PROD :
 			return saveNewProdTypes;
+		case DELETE_PRODUCT:
+			return deleteProductTypes;
 		default:
 			return null;
 	}

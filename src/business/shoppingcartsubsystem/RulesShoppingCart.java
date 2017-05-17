@@ -14,7 +14,7 @@ import business.externalinterfaces.ShoppingCart;
 import business.rulesbeans.ShopCartBean;
 import business.rulesubsystem.RulesSubsystemFacade;
 
-class RulesShoppingCart implements Rules{
+class RulesShoppingCart implements Rules {
 	
 	private HashMap<String,DynamicBean> table;
 	private DynamicBean bean;	
@@ -24,7 +24,7 @@ class RulesShoppingCart implements Rules{
 		bean = new ShopCartBean(shoppingCart);
 	}	
 		
-	///////////////implementation of interface
+	/////////////// code implementation of interface
 	public String getModuleName(){
 		return config.getProperty(RulesConfigKey.SHOPCART_MODULE.getVal());
 	}

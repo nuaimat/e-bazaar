@@ -18,8 +18,6 @@ public interface Order {
     public Address getBillAddress();
     public CreditCard getPaymentInfo();
 
-	
-	//implement
 
   	public void setDate(LocalDate date);
 	public void setShipAddress(Address add);
