@@ -8,4 +8,6 @@ import middleware.externalinterfaces.DbClass;
 /* Used only for testing DbClassAddress */
 public interface DbClassAddressForTest extends DbClass {
 	public List<Address> readAllAddresses(CustomerProfile custProfile) throws DatabaseException;
+	public Address readDefaultBillAddressforTest(CustomerProfile custProfile) throws DatabaseException;
+	public Address readDefaultShipAddressforTest(CustomerProfile custProfile) throws DatabaseException;
 }

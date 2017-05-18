@@ -94,4 +94,10 @@ public void runShoppingCartRules() throws RuleException, BusinessException;
        *  will be checked against quantity requested)
        */
 public void runFinalOrderRules() throws RuleException, BusinessException;
+
+	/**
+	 * for testing
+     */
+	DbClassShoppingCartForTest getGenericDbClassShoppingCart();
+	ShoppingCart getGenericShoppingCartForTest();
 }

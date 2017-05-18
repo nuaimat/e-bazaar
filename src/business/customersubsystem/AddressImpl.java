@@ -2,7 +2,7 @@ package business.customersubsystem;
 
 import business.externalinterfaces.Address;
 
-class AddressImpl implements Address {
+public class AddressImpl implements Address {
 	private String street;
 	private String city;
 	private String state;

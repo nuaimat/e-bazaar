@@ -10,11 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import business.externalinterfaces.Address;
-import business.externalinterfaces.CreditCard;
-import business.externalinterfaces.CustomerProfile;
-import business.externalinterfaces.Order;
-import business.externalinterfaces.OrderItem;
+import business.externalinterfaces.*;
 import business.util.Convert;
 import middleware.DbConfigProperties;
 import middleware.dataaccess.DataAccessSubsystemFacade;
@@ -24,7 +20,7 @@ import middleware.externalinterfaces.DbClass;
 import middleware.externalinterfaces.DbConfigKey;
 
 
-class DbClassOrder implements DbClass {
+class DbClassOrder implements DbClass, DbClassOrderForTest {
 	enum Type {GET_ORDER_ITEMS, GET_ORDER_IDS, GET_ORDER_DATA, SUBMIT_ORDER, SUBMIT_ORDER_ITEM};
 	
 	private static final Logger LOG = 
@@ -276,7 +272,16 @@ class DbClassOrder implements DbClass {
 	        	return null;
 		}
 	}
-   
-     
+
+	@Override
+	public Integer submitOrderForTest(CustomerProfile customer, Order order) throws DatabaseException {
+		submitOrder(customer, order);
+		return order.getOrderId();
+	}
+
+	@Override
+	public List<Integer> readOrderHistoryForTest(CustomerProfile customer) throws DatabaseException {
+		return getAllOrderIds(customer);
+	}
     
 }

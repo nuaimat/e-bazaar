@@ -5,10 +5,7 @@ import java.util.*;
 import java.util.logging.Logger;
 
 import business.exceptions.BackendException;
-import business.externalinterfaces.Catalog;
-import business.externalinterfaces.CatalogTypes;
-import business.externalinterfaces.Product;
-import business.externalinterfaces.ProductSubsystem;
+import business.externalinterfaces.*;
 import business.util.TwoKeyHashMap;
 import middleware.exceptions.DatabaseException;
 
@@ -147,6 +144,15 @@ public class ProductSubsystemFacade implements ProductSubsystem {
 	@Override
 	public void deleteCatalog(Catalog catalog) throws BackendException {
 		// do nothing for now
+	}
+
+	public DbClassProductForTest getGenericDbClassProduct() {
+		return new DbClassProduct();
+	}
+
+	@Override
+	public DbClassCatalogForTest getGenericDbClassCatalog() {
+		return new DbClassCatalog();
 	}
 
 

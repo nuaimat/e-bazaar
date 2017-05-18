@@ -47,7 +47,7 @@ class CartItemImpl implements CartItem {
         this.quantity = quantity;
         this.totalprice =totalprice;
         this.alreadySaved = alreadySaved;
-        ProductSubsystem prodSS= new ProductSubsystemFacade();
+        ProductSubsystem prodSS = new ProductSubsystemFacade();
         productName = prodSS.getProductFromId(productid).getProductName();
     }
     

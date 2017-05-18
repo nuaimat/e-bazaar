@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import business.externalinterfaces.DbClassProductForTest;
 import middleware.DbConfigProperties;
 import middleware.dataaccess.DataAccessSubsystemFacade;
 import middleware.exceptions.DatabaseException;
@@ -19,7 +20,17 @@ import business.externalinterfaces.Product;
 import business.util.Convert;
 import business.util.TwoKeyHashMap;
 
-class DbClassProduct implements DbClass {
+class DbClassProduct implements DbClass, DbClassProductForTest {
+	@Override
+	public Integer saveNewProductForTest(Product product, Catalog catalog) throws DatabaseException {
+		return saveNewProduct(product, catalog);
+	}
+
+	@Override
+	public void deleteProductForTest(Integer productId) throws DatabaseException {
+		deleteProduct(productId);
+	}
+
 	enum Type {LOAD_PROD_TABLE, READ_PRODUCT, READ_PROD_LIST, SAVE_NEW_PROD, DELETE_PRODUCT};
 
 	private static final Logger LOG = Logger.getLogger(DbClassProduct.class

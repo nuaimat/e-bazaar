@@ -98,8 +98,18 @@ class DbClassAddress implements DbClass, DbClassAddressForTest {
     	dataAccessSS.atomicRead(this);	
     	return addressList;
     }
- 
-    @Override
+
+	@Override
+	public Address readDefaultBillAddressforTest(CustomerProfile custProfile) throws DatabaseException {
+		return readDefaultBillAddress(custProfile);
+	}
+
+	@Override
+	public Address readDefaultShipAddressforTest(CustomerProfile custProfile) throws DatabaseException {
+		return readDefaultShipAddress(custProfile);
+	}
+
+	@Override
     public String getDbUrl() {
     	DbConfigProperties props = new DbConfigProperties();	
     	return props.getProperty(DbConfigKey.ACCOUNT_DB_URL.getVal());

@@ -1,14 +1,20 @@
 package business.shoppingcartsubsystem;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import business.customersubsystem.AddressImpl;
+import business.customersubsystem.CreditCardImpl;
+import business.customersubsystem.CustomerSubsystemFacade;
 import business.exceptions.BackendException;
 import business.exceptions.BusinessException;
 import business.exceptions.RuleException;
 import business.externalinterfaces.*;
+import business.productsubsystem.ProductSubsystemFacade;
+import business.util.Convert;
 import middleware.exceptions.DatabaseException;
 import presentation.data.CartItemPres;
 import presentation.data.DefaultData;
@@ -107,10 +113,51 @@ public class ShoppingCartSubsystemFacade implements ShoppingCartSubsystem {
 	//interface methods for testing
 	
 	public ShoppingCart getEmptyCartForTest() {
-		return new ShoppingCartImpl();
+		ShoppingCartImpl sci = new ShoppingCartImpl();
+		Address addr = getFacebookAddressForTest();
+
+		sci.setBillAddress(addr);
+		sci.setShipAddress(addr);
+		sci.setPaymentInfo(getSamplePaymentInfoForTest());
+
+		ProductSubsystem prodSS= new ProductSubsystemFacade();
+
+		Product p = null;
+		try {
+			p = prodSS.getProductList(prodSS.getCatalogList().get(0)).get(0);
+			CartItemImpl item = new CartItemImpl(0, p.getProductId() , 0, "1", "0.9", true);
+			item.setCartId(0);
+			sci.addItem(item);
+
+		} catch (BackendException e) {
+			LOG.warning("No items found inside first Catalog");
+		}
+
+		return sci;
 	}
 
-	
+	private CreditCard getSamplePaymentInfoForTest() {
+		 CreditCard cc = new CreditCardImpl("John Snow",
+				 Convert.localDateAsString(
+						 LocalDate.of(2030, 12, 31)
+				 ),
+				 "4111111111111111",
+				 "Visa"
+		 );
+
+		return cc;
+	}
+
+	private Address getFacebookAddressForTest() {
+		Address addr = new AddressImpl();
+		addr.setStreet("1 Hacker Way");
+		addr.setCity("Menlo Park");
+		addr.setState("CA");
+		addr.setZip("94025");
+		return addr;
+	}
+
+
 	public CartItem getEmptyCartItemForTest() {
 		return new CartItemImpl();
 	}
@@ -135,6 +182,16 @@ public class ShoppingCartSubsystemFacade implements ShoppingCartSubsystem {
 	public void runFinalOrderRules() throws RuleException, BusinessException {
 		Rules rulesShoppingCartObject = new RulesFinalOrder(this.liveCart);
 		rulesShoppingCartObject.runRules();
+	}
+
+	@Override
+	public DbClassShoppingCartForTest getGenericDbClassShoppingCart() {
+		return new DbClassShoppingCart();
+	}
+
+	@Override
+	public ShoppingCart getGenericShoppingCartForTest() {
+		return getEmptyCartForTest();
 	}
 
 }

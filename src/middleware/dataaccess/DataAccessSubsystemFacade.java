@@ -3,6 +3,8 @@ package middleware.dataaccess;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
@@ -241,9 +243,18 @@ public class DataAccessSubsystemFacade implements DataAccessSubsystem, DataAcces
         	cons.add(SimpleConnectionPool.INSTANCE.getConnection(dburls[i]));
         }
         //need to rethink this
-//        for(int i = 0; i < numConnections; ++i) {
-//        	results[i] = SimpleConnectionPool.doQuery(cons.get(i), queries[i]);
-//        }
+        for(int i = 0; i < numConnections; ++i) {
+			try {
+				Statement st = cons.get(i).createStatement();
+				st.execute(queries[i]);
+				results[i] = st.getResultSet();
+
+			} catch (SQLException e) {
+				throw new DatabaseException(e);
+			}
+
+
+        }
         return results;   	
     	
     }

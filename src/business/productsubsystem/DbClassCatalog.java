@@ -5,6 +5,7 @@ import java.sql.Types;
 import java.util.logging.Logger;
 
 import business.externalinterfaces.Catalog;
+import business.externalinterfaces.DbClassCatalogForTest;
 import business.externalinterfaces.Product;
 import business.util.TwoKeyHashMap;
 import middleware.DbConfigProperties;
@@ -20,10 +21,9 @@ import middleware.externalinterfaces.DbConfigKey;
  * the database, see DbClassCatalogs
  *
  */
-class DbClassCatalog implements DbClass {
+class DbClassCatalog implements DbClass, DbClassCatalogForTest {
 
-
-	enum Type {LOAD_CATALOG_TABLE, INSERT, READ_CATALOG, READ_CATALOG_BY_NAME};
+	enum Type {LOAD_CATALOG_TABLE, INSERT, READ_CATALOG, READ_CATALOG_BY_NAME, DELETE_CATALOG};
 	@SuppressWarnings("unused")
 	private static final Logger LOG = 
 		Logger.getLogger(DbClassCatalog.class.getPackage().getName());
@@ -36,9 +36,10 @@ class DbClassCatalog implements DbClass {
 	private String readCatalogByNameQuery = "SELECT * FROM CatalogType WHERE catalogname = '?'";
 	private String readCatalogQuery = "SELECT * FROM CatalogType WHERE catalogid = ?";
 	private String readAllCatalogesQuery = "SELECT * FROM CatalogType";
+	private String deleteCatalogQuery = "DELETE FROM CatalogType WHERE catalogid = ?";
 
-	private Object[] insertParams, loadCatalogTableParams, readCatalogParams;
-	private int[] insertTypes, loadCatalogTableTypes, readCatalogTypes;
+	private Object[] insertParams, loadCatalogTableParams, readCatalogParams, deleteCatalogParams;
+	private int[] insertTypes, loadCatalogTableTypes, readCatalogTypes, deleteCatalogTypes;
 	private static TwoKeyHashMap<Integer, String, Catalog> catalogTable;
 
 	private Catalog catalog;
@@ -67,6 +68,8 @@ class DbClassCatalog implements DbClass {
 				return readCatalogQuery;
 			case READ_CATALOG_BY_NAME:
 				return readCatalogByNameQuery;
+			case DELETE_CATALOG:
+				return deleteCatalogQuery;
 			default:
 				return null;
 		}
@@ -76,6 +79,8 @@ class DbClassCatalog implements DbClass {
    		switch(queryType) {
    			case INSERT:
    				return insertParams;
+			case DELETE_CATALOG:
+				return deleteCatalogParams;
    			default:
    				return null;
    		}
@@ -85,6 +90,8 @@ class DbClassCatalog implements DbClass {
 		 switch(queryType) {
 			case INSERT:
 				return insertTypes;
+			 case DELETE_CATALOG:
+				 return deleteCatalogTypes;
 			default:
 				return null;
 		}
@@ -126,5 +133,25 @@ class DbClassCatalog implements DbClass {
 		dataAccessSS.atomicRead(this);
 		return catalog;
 	}
+
+	public void deleteCatalog(Integer catalogId) throws DatabaseException {
+		queryType = Type.DELETE_CATALOG;
+		deleteCatalogParams = new Object[]{catalogId};
+		deleteCatalogTypes = new int[] {Types.INTEGER};
+
+		dataAccessSS.deleteWithinTransaction(this);
+	}
+
+	@Override
+	public int saveNewCatalogForTest(String catName) throws DatabaseException {
+		return saveNewCatalog(catName);
+	}
+
+	@Override
+	public void deleteCatalogForTest(Integer catalogId) throws DatabaseException {
+		deleteCatalog(catalogId);
+
+	}
+
 
 }

@@ -76,8 +76,13 @@ public class OrderSubsystemFacade implements OrderSubsystem {
             throw new BackendException(e);
         }
     }
-	
-	/** Used whenever an order item needs to be created from outside the order subsystem */
+
+    @Override
+    public DbClassOrderForTest getGenericDbClassOrder() {
+        return new DbClassOrder();
+    }
+
+    /** Used whenever an order item needs to be created from outside the order subsystem */
     public static OrderItem createOrderItem(
     		Integer prodId, Integer orderId, String quantityReq, String totalPrice) {
         OrderItemImpl oi = new OrderItemImpl(

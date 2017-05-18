@@ -7,7 +7,7 @@ import java.util.Optional;
 import business.externalinterfaces.*;
 import javafx.beans.property.*;
 
-class ProductImpl implements Product {
+public class ProductImpl implements Product {
 	private String productName;
     private int productId;     
 	private int quantityAvail; 

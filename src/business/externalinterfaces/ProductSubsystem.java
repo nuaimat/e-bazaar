@@ -35,4 +35,7 @@ public interface ProductSubsystem {
 	/** deletes a catalog obtained from user input */
 	public void deleteCatalog(Catalog catalog) throws BackendException;
 
+	/* for testing */
+	public DbClassProductForTest getGenericDbClassProduct();
+	public DbClassCatalogForTest getGenericDbClassCatalog();
 }

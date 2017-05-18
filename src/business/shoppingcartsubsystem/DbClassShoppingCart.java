@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import business.externalinterfaces.*;
 import middleware.DbConfigProperties;
 import middleware.dataaccess.DataAccessSubsystemFacade;
 import middleware.exceptions.DatabaseException;
@@ -18,15 +19,10 @@ import middleware.externalinterfaces.DbClass;
 import middleware.externalinterfaces.DbConfigKey;
 import business.customersubsystem.CustomerSubsystemFacade;
 import business.exceptions.BackendException;
-import business.externalinterfaces.Address;
-import business.externalinterfaces.CartItem;
-import business.externalinterfaces.CreditCard;
-import business.externalinterfaces.CustomerProfile;
-import business.externalinterfaces.ShoppingCart;
 import business.shoppingcartsubsystem.DbClassShoppingCart.Type;
 
 
-class DbClassShoppingCart implements DbClass {
+class DbClassShoppingCart implements DbClass, DbClassShoppingCartForTest {
 	enum Type {GET_ID, GET_SAVED_ITEMS, GET_TOP_LEVEL_SAVED_CART,
 		SAVE_CART, SAVE_CART_ITEM, DELETE_CART, DELETE_ALL_CART_ITEMS};
 	
@@ -94,7 +90,6 @@ class DbClassShoppingCart implements DbClass {
 	    	    	
 		    //Second, save top level of cart to be saved
 		    cartId = saveCartTopLevel(custProfile);  //returns new cartId
-	    
 		    //Finally, save the associated cartitems in a loop
 		    //We have the cartId for these cartitems
 		    for(CartItem item : cartItems){
@@ -441,5 +436,11 @@ class DbClassShoppingCart implements DbClass {
         	return null;	
         }
     }
-    
+
+
+	@Override
+	public Integer saveCartForTest(CustomerProfile custProfile, ShoppingCart cart) throws DatabaseException {
+		saveCart(custProfile, cart);
+		return cart.getCartItems().get(0).getCartid();
+	}
 }
