@@ -15,19 +15,13 @@
 
 
     <dependencies>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>3.8.1</version>
-            <scope>test</scope>
-        </dependency>
+
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
             <version>3.1.0</version>
             <scope>provided</scope>
         </dependency>
-
         <dependency>
             <groupId>jstl</groupId>
             <artifactId>jstl</artifactId>
@@ -36,10 +30,16 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>6.0.6</version>
+            <version>5.1.18</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>3.8.1</version>
+            <scope>test</scope>
         </dependency>
 
-
+        <!-- e-bazaar specific jars -->
         <dependency>
             <groupId>credit.verifsystem</groupId>
             <artifactId>verificationSystem</artifactId>
@@ -61,7 +61,6 @@
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/rulesencoding.jar</systemPath>
         </dependency>
-
         <dependency>
             <groupId>jess</groupId>
             <artifactId>core</artifactId>
@@ -69,11 +68,15 @@
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/jess.jar</systemPath>
         </dependency>
+
+
+
+
     </dependencies>
 
 
     <build>
-        <finalName>RideShare</finalName>
+        <finalName>EBazaar</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

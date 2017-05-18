@@ -6,7 +6,7 @@ import java.util.Properties;
 import java.util.logging.Logger;
 
 public class DbConfigProperties {
-	private static final String PROPERTIES = "resources/dbconfig.properties";
+	private static final String PROPERTIES = "/dbconfig.properties";
 	private static final Logger LOG = Logger.getLogger("");
 	private static final String PROPS = PROPERTIES;
 	private static Properties props;
@@ -33,11 +33,11 @@ public class DbConfigProperties {
 	public static void readProps(String loc) {
 		LOG.info("Location from which readProps will read (in DbConfigProperties): " + loc);
 		Properties ret = new Properties();
-            URL url = DbConfigProperties.class.getClassLoader().
+            /*URL url = DbConfigProperties.class.getClassLoader().
                     getResource(loc);
-            
+		LOG.info("Location URL: " + url);*/
             try {
-                ret.load(url.openStream()); 
+                ret.load(DbConfigProperties.class.getResourceAsStream(loc));
             } catch(IOException e) {
                 LOG.warning("Unable to read properties file for Ebazaar");
             } finally {

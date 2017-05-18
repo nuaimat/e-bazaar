@@ -10,7 +10,7 @@ import middleware.DbConfigProperties;
 
 public class RulesConfigProperties {
 
-    private static final String PROPERTIES = "resources/rulesconfig.properties";
+    private static final String PROPERTIES = "/rulesconfig.properties";
     private static final Logger LOG = Logger.getLogger("");
     private static final String PROPS = PROPERTIES;
     public static Properties props;
@@ -38,12 +38,10 @@ public class RulesConfigProperties {
      * @param propsLoc
      */
     public static void readProps(String loc) {
-        System.out.println(loc);
+        LOG.info("Location from which readProps will read (in RulesConfigProperties): " + loc);
         Properties ret = new Properties();
-        URL url = RulesConfigProperties.class.getClassLoader().
-                getResource(loc);
         try {
-            ret.load(url.openStream());
+            ret.load(RulesConfigProperties.class.getResourceAsStream(loc));
         } catch (IOException e) {
             LOG.warning("Unable to read properties file for Ebazaar");
         } finally {
