@@ -38,6 +38,37 @@
             <artifactId>mysql-connector-java</artifactId>
             <version>6.0.6</version>
         </dependency>
+
+
+        <dependency>
+            <groupId>credit.verifsystem</groupId>
+            <artifactId>verificationSystem</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/creditVerifSystem.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>jess</groupId>
+            <artifactId>rulesengine</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/rulesengine.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>jess</groupId>
+            <artifactId>rulesencoding</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/rulesencoding.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>jess</groupId>
+            <artifactId>core</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/jess.jar</systemPath>
+        </dependency>
     </dependencies>
 
 
