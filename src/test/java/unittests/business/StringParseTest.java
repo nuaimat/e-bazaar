@@ -33,7 +33,7 @@ public class StringParseTest extends TestCase {
 	static Logger log = Logger.getLogger(StringParseTest.class.getName());
 	
 	static {
-		AllTests.initializeProperties();
+		AllTests.testInitializeProperties();
 	}
 
 	/**

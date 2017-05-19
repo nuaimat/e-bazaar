@@ -3,6 +3,7 @@ package dbsetup;
 import alltests.AllTests;
 import business.customersubsystem.CustomerSubsystemFacade;
 import business.externalinterfaces.Address;
+import business.externalinterfaces.CustomerSubsystem;
 import business.externalinterfaces.Order;
 import business.ordersubsystem.OrderSubsystemFacade;
 import business.util.Convert;
@@ -19,7 +20,7 @@ import java.util.List;
 
 public class DbQueries {
 	static {
-		AllTests.initializeProperties();
+		AllTests.testInitializeProperties();
 	}
 	static final DbConfigProperties PROPS = new DbConfigProperties();
 	static Connection con = null;

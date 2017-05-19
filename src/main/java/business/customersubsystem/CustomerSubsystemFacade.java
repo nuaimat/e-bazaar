@@ -232,10 +232,6 @@ public class CustomerSubsystemFacade implements CustomerSubsystem {
 		transferObject.runRules();
 	}
 
-	public static Address createAddress(String street, String city, String state, String zip, boolean isShip,
-			boolean isBill) {
-		return new AddressImpl(street, city, state, zip, isShip, isBill);
-	}
 
 	public static CustomerProfile createCustProfile(Integer custid, String firstName, String lastName,
 			boolean isAdmin) {
@@ -285,6 +281,10 @@ public class CustomerSubsystemFacade implements CustomerSubsystem {
 		shoppingCartSubsystem.saveLiveCart();
 	}
 
+	public static Address createAddress(String street, String city, String state, String zip, boolean isShip,
+										boolean isBill) {
+		return new AddressImpl(street, city, state, zip, isShip, isBill);
+	}
 
 	/////////////////// For unit testing only ////////////////
 

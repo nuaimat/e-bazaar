@@ -19,7 +19,7 @@ public class DbClassAddressTest extends TestCase {
 	static Logger log = Logger.getLogger(DbClassAddressTest.class.getName());
 	
 	static {
-		AllTests.initializeProperties();
+		AllTests.testInitializeProperties();
 	}
 
 	public void testReadAllAddresses() {

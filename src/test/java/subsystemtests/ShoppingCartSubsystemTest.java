@@ -19,7 +19,7 @@ public class ShoppingCartSubsystemTest extends TestCase{
 	static Logger log = Logger.getLogger(ShoppingCartSubsystemTest.class.getName());
 	
 	static {
-		AllTests.initializeProperties();
+		AllTests.testInitializeProperties();
 	}
 	
 	public void testRetrieveSavedCart(){

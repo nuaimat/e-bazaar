@@ -9,7 +9,6 @@ import business.externalinterfaces.Address;
 import business.externalinterfaces.CreditCard;
 import business.externalinterfaces.CustomerProfile;
 import business.externalinterfaces.CustomerSubsystem;
-import business.usecasecontrol.BrowseAndSelectController;
 import business.usecasecontrol.CheckoutController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

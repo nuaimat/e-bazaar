@@ -22,17 +22,19 @@ See the method initializeProperties.
 public class AllTests extends TestSuite {
     static Logger log = Logger.getLogger(AllTests.class.getName());
     static {
-    	initializeProperties();
+    	testInitializeProperties();
 	} 
 	private static boolean initialized = false;
     
-    public static void initializeProperties() {
+    public static void testInitializeProperties() {
     	if (!initialized) {
     		DbConfigProperties.readProps("/dbconfig.properties");
     		RulesConfigProperties.readProps("/rulesconfig.properties");
     		initialized = true;
     	}
     }
+    
+    
 
 	public static Test testSuite() {
 		TestSuite suite = new TestSuite();

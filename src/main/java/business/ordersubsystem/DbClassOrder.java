@@ -58,7 +58,7 @@ class DbClassOrder implements DbClass, DbClassOrderForTest {
         orderIdsParams = new Object[]{custProfile.getCustId()};
         orderIdsTypes = new int[]{Types.INTEGER};
         dataAccessSS.atomicRead(this);
-        return Collections.unmodifiableList(orderIds);      
+        return Collections.unmodifiableList(orderIds);
     }
     
     OrderImpl getOrderData(Integer orderId) throws DatabaseException {

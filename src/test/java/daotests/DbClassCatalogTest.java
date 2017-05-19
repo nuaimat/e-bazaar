@@ -16,7 +16,7 @@ public class DbClassCatalogTest extends TestCase {
 	static Logger log = Logger.getLogger(DbClassCatalogTest.class.getName());
 	
 	static {
-		AllTests.initializeProperties();
+		AllTests.testInitializeProperties();
 	}
 	
 	

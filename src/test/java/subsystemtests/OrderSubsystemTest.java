@@ -21,7 +21,7 @@ public class OrderSubsystemTest extends TestCase {
 	static Logger log = Logger.getLogger(OrderSubsystemTest.class.getName());
 	
 	static {
-		AllTests.initializeProperties();
+		AllTests.testInitializeProperties();
 	}
 	
 	public void testGetOrderHistory(){

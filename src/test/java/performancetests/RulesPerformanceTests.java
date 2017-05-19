@@ -20,7 +20,7 @@ public class RulesPerformanceTests extends TestCase {
 	static Logger log = Logger.getLogger(RulesPerformanceTests.class.getName());
 	
 	static {
-		AllTests.initializeProperties();
+		AllTests.testInitializeProperties();
 	}
 
 	

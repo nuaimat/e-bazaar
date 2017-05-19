@@ -16,7 +16,7 @@ public class ProductSubsystemTest extends TestCase {
 	static Logger log = Logger.getLogger(ProductSubsystemTest.class.getName());
 	
 	static {
-		AllTests.initializeProperties();
+		AllTests.testInitializeProperties();
 	}
 	
 	public void testGetCatalogList() {

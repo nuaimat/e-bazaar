@@ -19,7 +19,7 @@ public class DbClassShoppingCartTest extends TestCase{
 	static Logger log = Logger.getLogger(DbClassShoppingCartTest.class.getName());
 	
 	static {
-		AllTests.initializeProperties();
+		AllTests.testInitializeProperties();
 	}
 	
 	public void testSaveLiveCart(){

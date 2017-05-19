@@ -26,7 +26,7 @@ public class SimpleConnectionPoolTest extends TestCase {
 	
 	static String name = "middleware.dataaccess.SimpleConnectionPool";
 	static {
-		AllTests.initializeProperties();
+		AllTests.testInitializeProperties();
 	}
 	DbConfigProperties props = new DbConfigProperties();
  	

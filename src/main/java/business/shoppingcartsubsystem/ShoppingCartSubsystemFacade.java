@@ -6,7 +6,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import business.customersubsystem.AddressImpl;
 import business.customersubsystem.CreditCardImpl;
 import business.customersubsystem.CustomerSubsystemFacade;
 import business.exceptions.BackendException;
@@ -149,12 +148,8 @@ public class ShoppingCartSubsystemFacade implements ShoppingCartSubsystem {
 	}
 
 	private Address getFacebookAddressForTest() {
-		Address addr = new AddressImpl();
-		addr.setStreet("1 Hacker Way");
-		addr.setCity("Menlo Park");
-		addr.setState("CA");
-		addr.setZip("94025");
-		return addr;
+		CustomerSubsystemFacade customerSubsystem = new CustomerSubsystemFacade();
+		return customerSubsystem.createAddress("1 Hacker Way", "Menlo Park", "CA", "94025", true, true);
 	}
 
 

@@ -27,7 +27,7 @@ public class DbClassOrderTest extends TestCase {
 	DbClassOrderForTest dbClass = oss.getGenericDbClassOrder();
 	
 	static {
-		AllTests.initializeProperties();
+		AllTests.testInitializeProperties();
 	}
 	
 	public void testSubmitOrderData(){

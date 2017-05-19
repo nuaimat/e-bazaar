@@ -15,7 +15,7 @@ public class CustomerSubsystemTest extends TestCase {
 	static String name = "Customer Subsystem Test";
 	static Logger log = Logger.getLogger(ProductSubsystemTest.class.getName());
 	static {
-		AllTests.initializeProperties();
+		AllTests.testInitializeProperties();
 	}
 	public void testReadDefaultBillAddress() {
 		final int DEFAULT_CUST_ID = 1;

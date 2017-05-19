@@ -19,7 +19,6 @@ import middleware.externalinterfaces.DbClass;
 import middleware.externalinterfaces.DbConfigKey;
 import business.customersubsystem.CustomerSubsystemFacade;
 import business.exceptions.BackendException;
-import business.shoppingcartsubsystem.DbClassShoppingCart.Type;
 
 
 class DbClassShoppingCart implements DbClass, DbClassShoppingCartForTest {
@@ -318,8 +317,8 @@ class DbClassShoppingCart implements DbClass, DbClassShoppingCartForTest {
     			String billCity = rs.getString("shipcity");
     			String billState = rs.getString("shipstate");
     			String billpZip = rs.getString("shipzipcode");
-    			billingAddress = 
-    				CustomerSubsystemFacade.createAddress(billStreet, billCity, billState, billpZip,false, true);
+    			billingAddress =
+						CustomerSubsystemFacade.createAddress(billStreet, billCity, billState, billpZip,false, true);
     			
     			//load credit card: createCreditCard(String name, String num, String type, expDate)
     			String name = rs.getString("nameoncard");

@@ -7,15 +7,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
+import business.externalinterfaces.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
 import business.customersubsystem.CustomerSubsystemFacade;
-import business.externalinterfaces.Address;
-import business.externalinterfaces.Catalog;
-import business.externalinterfaces.CreditCard;
-import business.externalinterfaces.Order;
-import business.externalinterfaces.OrderItem;
-import business.externalinterfaces.Product;
 import business.ordersubsystem.OrderImpl;
 //import business.ordersubsystem.OrderImpl;
 import business.ordersubsystem.OrderItemImpl;
@@ -90,9 +85,9 @@ public class DefaultData {
 	//"Name", "Card Number", "Card Type", "Expiration Date"
 	public static final List<Address> ADDRESSES_ON_FILE 
 	   = Arrays.asList(CustomerSubsystemFacade.createAddress("101 Jackson St", "Fairfield", "IA", "52556", true, true),
-			   CustomerSubsystemFacade.createAddress("300 W. Washington Ave", "Fairfield", "IA", "52556", true, false),
-			   CustomerSubsystemFacade.createAddress("1000 N. 4th St.", "Fairfield", "IA", "52557", false, true),
-			   CustomerSubsystemFacade.createAddress("1435 Channing Ave", "Palo Alto", "CA", "94301", true, true));
+			CustomerSubsystemFacade.createAddress("300 W. Washington Ave", "Fairfield", "IA", "52556", true, false),
+			CustomerSubsystemFacade.createAddress("1000 N. 4th St.", "Fairfield", "IA", "52557", false, true),
+			CustomerSubsystemFacade.createAddress("1435 Channing Ave", "Palo Alto", "CA", "94301", true, true));
 	public static final List<CustomerPres> CUSTS_ON_FILE
 		= Arrays.asList(new CustomerPres(CustomerSubsystemFacade.createCustProfile(1, "John", "Smith", false)), 
 				new CustomerPres(CustomerSubsystemFacade.createCustProfile(2, "Andrew", "Anderson", false)),

@@ -75,9 +75,10 @@ public interface CustomerSubsystem {
 	 * controller for this data.
 	 */
 	public void checkCreditCard() throws BusinessException;
-    
-    
-	 /** 
+
+
+
+    /**
      * Returns this customer's order history as an unmodifiable list, 
      * stored in the Customer Subsystem Facade (not
      * read from the database). Used by other subsystems
