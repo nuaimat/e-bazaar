@@ -1,0 +1,175 @@
+body { padding-top: 70px; }
+
+.table>tbody>tr>td, .table>tfoot>tr>td{
+    vertical-align: middle;
+}
+@media screen and (max-width: 600px) {
+    table#cart tbody td .form-control{
+        width:20%;
+        display: inline !important;
+    }
+    .actions .btn{
+        width:36%;
+        margin:1.5em 0;
+    }
+
+    .actions .btn-info{
+        float:left;
+    }
+    .actions .btn-danger{
+        float:right;
+    }
+
+    table#cart thead { display: none; }
+    table#cart tbody td { display: block; padding: .6rem; min-width:320px;}
+    table#cart tbody tr td:first-child { background: #333; color: #fff; }
+    table#cart tbody td:before {
+        content: attr(data-th); font-weight: bold;
+        display: inline-block; width: 8rem;
+    }
+
+
+
+    table#cart tfoot td{display:block; }
+    table#cart tfoot td .btn{display:block;}
+
+}
+.login p {
+	font-size: 10px;
+	color: red
+}
+.input{
+	margin-left:auto;
+	margin-right:auto;
+	border: 2px inset black;
+	width: 50em;
+	height: 50em;
+	}
+.login input{	
+	background-color: #DFE2DB;
+	border-radius: 8px;
+	display: block;
+	border-width: 2px;
+	width: 20em;
+	height: 2em;
+	}
+.logbtn {
+	margin: 1.2em;
+	margin-left: 0.2em;
+	}
+.login {
+	width: 50%;
+	height: 50%;
+	padding:5ex;
+	margin: auto;
+	background-color: #3ffce9; 
+	
+}
+.pac-container {
+    background-color: #FFF;
+    z-index: 20;
+    position: fixed;
+    display: inline-block;
+    float: left;
+}
+.modal{
+    z-index: 20;
+}
+.modal-backdrop{
+    z-index: 10;
+}
+
+.bld {
+    font-weight: bold;
+}
+
+.ridetitle .title-text:first-letter{
+    text-transform: capitalize;
+}
+.ridetitle{
+    background-color: #5bc0de
+}
+
+.ridedest {
+    width: 50%;float: left;margin: 0;padding: 0;box-sizing: border-box;
+}
+.ridedest img {
+    vertical-align: top;
+    margin-left: 1em;
+    margin-top: 0.5em;
+}
+
+.ridedest .address {
+    margin: 0.3em 1em;
+}
+
+.ridetitle .text-primary{
+    margin-right: 1em;
+    color: #FFFFFF;
+}
+
+.panel-footer .ride-likes, .panel-footer .ride-comments {
+    padding: 10px 15px;
+}
+
+.panel-footer .comment-row dt, .panel-footer .comment-row dd {
+    float: left;
+}
+.panel-footer .comment-row dt, .ride-comments .row {
+    clear: left
+}
+.panel-footer .comment-row dt {
+    margin-right: 1em;
+}
+.ridedest .badge {
+    margin-left: 1em;
+}
+.procontainer{
+	margin: auto;
+	width: 40em;
+}
+.procontainer h2{
+	font-family: sans-serif;
+}
+.address1 div{	
+	margin-bottom: 1em;
+	background-color:#42f4ce;
+	overflow: auto
+	
+}
+.address1 input{
+	
+	border-radius: 4px;
+	float:right;
+	width:5em;	
+}
+#currentweather , #forcast{
+    border: solid 0.1em #b3b3ff ;
+    border-radius: 8em;
+}
+#currentweather {
+    float: left;
+}
+#forcast{
+    float: right;
+}
+
+#new-content-message {
+     position: fixed;
+     top: 50px;
+     left: 40%;
+     width: auto;
+}
+
+#inner-message {
+     margin: 0 auto;
+     padding: 10px;
+}
+
+.biglogo {
+    text-align: center;
+}
+
+h2 {
+    margin-left: 5px;
+}
