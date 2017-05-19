@@ -39,4 +39,22 @@ public enum WebSession {
     public boolean isLoggedIn(HttpSession session) {
         return session.getAttribute("cust_id") != null;
     }
+
+    public void logout(HttpSession session) {
+        SessionCache cache = SessionCache.getInstance();
+
+        cache.add(SessionCache.LOGGED_IN, Boolean.FALSE);
+        String [] keys = {
+                SessionCache.CUSTOMER, SessionCache.CUSTOMER_ORDER_HISTORY,
+                SessionCache.LOGGED_IN, SessionCache.SHOP_CART
+        };
+
+        for(String key:keys){
+            session.removeAttribute(key);
+        }
+
+        session.removeAttribute("cust_id");
+        session.removeAttribute("cust_firstname");
+
+    }
 }

@@ -1,8 +1,10 @@
 package presentation.web.controller;
 
 import business.Login;
+import business.customersubsystem.CustomerSubsystemFacade;
 import business.exceptions.BackendException;
 import business.exceptions.UserException;
+import business.externalinterfaces.CustomerSubsystem;
 import presentation.data.LoginData;
 import presentation.data.SessionCache;
 import presentation.web.util.WebSession;
@@ -36,13 +38,12 @@ public class LogInController extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println(request.getServletPath());
-		/*if(request.getServletPath().equals("/logout")){
-			UserDAO userDAO = new UserDAO(this);
-			userDAO.logout(request);
+		if(request.getServletPath().equals("/logout")){
+			WebSession.INSTANCE.logout(request.getSession());
 			response.sendRedirect(request.getContextPath() + "/login?msg=successfully logged out");
-		} else {*/
+		} else {
 			request.getRequestDispatcher("/login.jsp").forward(request, response);
-		//}
+		}
 
 
 	}
