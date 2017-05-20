@@ -8,7 +8,7 @@ $(function () {
             activeLink = "order-history-nav-link";
         } else if (window.location.pathname.match("\/products")) {
             activeLink = "products-nav-link";
-        } else if (window.location.pathname.match("\/cart")) {
+        } else if (window.location.pathname.match("\/cart") || window.location.pathname.match("\/secure_cart")) {
             activeLink = "shopping-cart-nav-link";
         }
         $("." + activeLink).addClass("active");

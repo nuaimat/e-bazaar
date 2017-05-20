@@ -40,19 +40,43 @@ public class CartController extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String method = request.getParameter("method");
-        if ("add_to_cart".equals(method)){
-            addItemToCart(request, response);
-        } else if("remove_item".equals(method)) {
-            removeCartItem(request, response);
-        } else if("display_product".equals(method)) {
-            displayProduct(request, response);
-        } else if("update_quantity".equals(method)){
-            updateItemQuantity(request, response);
-        } else {
-            listCartItems(request, response);
+        if(method == null){
+            method = "display";
+        }
+        switch (method){
+            case "add_to_cart":
+                addItemToCart(request, response);
+                break;
+            case "remove_item":
+                removeCartItem(request, response);
+                break;
+            case "display_product":
+                displayProduct(request, response);
+                break;
+            case "update_quantity":
+                updateItemQuantity(request, response);
+                break;
+            case "retrieveSavedCart":
+                if(!WebSession.INSTANCE.isLoggedIn(request.getSession())){
+                    response.sendRedirect(request.getContextPath() + "/secure_cart?action=retrieveSavedCart");
+                    return;
+                } else {
+                    retreiveSavedCart(request, response);
+                }
+                break;
+            default:
+                listCartItems(request, response);
         }
 
 
+    }
+
+    private void retreiveSavedCart(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        ShoppingCartSubsystem shoppingCartSubsystem = (ShoppingCartSubsystemFacade) request.getSession().getAttribute(SessionCache.SHOP_CART);
+
+        shoppingCartSubsystem.makeSavedCartLive();
+
+        response.sendRedirect(request.getContextPath() + "/cart");
     }
 
 

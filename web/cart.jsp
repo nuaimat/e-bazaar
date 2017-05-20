@@ -33,10 +33,10 @@
                             <a class="hidden-xs navbar-brand" href="#"><span class="glyphicon glyphicon-shopping-cart"></span> Shopping Cart</a>
                         </div>
                         <ul class="nav navbar-nav">
-                            <li><a href="<c:url value="/secure_cart" />?action=retrieveSavedCart">Retreive Saved
+                            <li><a href="<c:url value="/secure_cart" />?method=retrieveSavedCart">Retreive Saved
                                 Cart</a></li>
-                            <li><a href="<c:url value="/secure_cart" />?action=save">Save Cart</a></li>
-                            <li><a href="<c:url value="/cart" />?action=clear">Clear Cart</a></li>
+                            <li><a href="<c:url value="/secure_cart" />?method=save">Save Cart</a></li>
+                            <li><a href="<c:url value="/cart" />?method=clear">Clear Cart</a></li>
                         </ul>
                     </div><!--/.nav-collapse -->
                 </div>
