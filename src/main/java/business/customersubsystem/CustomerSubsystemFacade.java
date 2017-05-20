@@ -48,8 +48,8 @@ public class CustomerSubsystemFacade implements CustomerSubsystem {
 	public void initializeCustomer(Integer id, List<CartItem> cartItems, int authorizationLevel) 
 			throws BackendException {
 		//validate cartItems
-		if(cartItems == null) throw new IllegalArgumentException("CustomerSubsystemFacade.initializeCustomer"
-				+ " received a null value for cartItems");
+		/* if(cartItems == null) throw new IllegalArgumentException("CustomerSubsystemFacade.initializeCustomer"
+				+ " received a null value for cartItems"); */
 		boolean isAdmin = (authorizationLevel >= 1);
 		loadCustomerProfile(id, isAdmin);
 		loadDefaultShipAddress();
@@ -64,7 +64,11 @@ public class CustomerSubsystemFacade implements CustomerSubsystem {
 		//places the previously saved shopping cart into the ShoppingCartSubsystem
 		shoppingCartSubsystem.retrieveSavedCart();
 		//sets any live cart items obtained before login into the ShoppingCartSubsystem's live cart
-		shoppingCartSubsystem.getLiveCart().setCartItems(cartItems);
+		if(cartItems != null)
+			shoppingCartSubsystem.getLiveCart().setCartItems(cartItems);
+		else {
+			shoppingCartSubsystem.getLiveCart().setCartItems(new ArrayList<>());
+		}
 		loadOrderData();
 	}
 

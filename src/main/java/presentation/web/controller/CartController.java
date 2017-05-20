@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -80,18 +81,22 @@ public class CartController extends HttpServlet {
 
 
         ProductSubsystem pss = new ProductSubsystemFacade();
-        Map<Integer, Double> prod_price = cachedCart.getCartItems()
-                .stream()
-                .map(e -> {
-                    Product p = null;
-                    try {
-                        p = pss.getProductFromId(e.getProductid());
-                    } catch (BackendException e1) {
+        Map<Integer, Double> prod_price = new HashMap<>();
+        if(cachedCart.getCartItems() != null){
+            prod_price = cachedCart.getCartItems()
+                    .stream()
+                    .map(e -> {
+                        Product p = null;
+                        try {
+                            p = pss.getProductFromId(e.getProductid());
+                        } catch (BackendException e1) {
 
-                    }
-                    return p;
-                })
-                .collect(Collectors.toMap(p -> p.getProductId(), p -> p.getUnitPrice()));
+                        }
+                        return p;
+                    })
+                    .collect(Collectors.toMap(p -> p.getProductId(), p -> p.getUnitPrice()));
+        }
+
 
         request.setAttribute("cart_items", cachedCart.getCartItems());
         request.setAttribute("prod_price", prod_price);

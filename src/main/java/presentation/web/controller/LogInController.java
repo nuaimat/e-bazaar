@@ -12,6 +12,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.logging.Logger;
 
@@ -71,9 +72,15 @@ public class LogInController extends HttpServlet {
 		}
 
 		if(loginSuccessful){
-			// TODO
-			// get final dest from session and clear it out
-			response.sendRedirect(request.getContextPath() + "/");
+			HttpSession session = request.getSession();
+			String redirectTo = (String) session.getAttribute("login_redirect_to");
+			if(redirectTo != null){
+				session.removeAttribute("login_redirect_to");
+				response.sendRedirect(redirectTo);
+			} else {
+				response.sendRedirect(request.getContextPath() + "/");
+			}
+
 		}
 		else{
 			response.sendRedirect(request.getContextPath() + "/login?msg=Wrong username or password");

@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.Enumeration;
 import java.util.logging.Logger;
 
 /**
@@ -37,10 +38,28 @@ public class AuthenticationFilter implements Filter {
 
         if (needsAuthentication(requestPath, request) && !isLoggedIn) {
         	LOG.info("Redirecting to " + request.getContextPath() + "/login");
+            session.setAttribute("login_redirect_to", getRequestURL(request));
             response.sendRedirect(request.getContextPath() + "/login");
         } else {
             chain.doFilter(req, res); // Logged-in user found, so just continue request.
         }
+    }
+
+    private String getRequestURL(HttpServletRequest request) {
+        String str=request.getRequestURL()+"?";
+        Enumeration<String> paramNames = request.getParameterNames();
+        while (paramNames.hasMoreElements())
+        {
+            String paramName = paramNames.nextElement();
+            String[] paramValues = request.getParameterValues(paramName);
+            for (int i = 0; i < paramValues.length; i++)
+            {
+                String paramValue = paramValues[i];
+                str=str + paramName + "=" + paramValue;
+            }
+            str=str+"&";
+        }
+       return str.substring(0,str.length()-1);
     }
 
 
