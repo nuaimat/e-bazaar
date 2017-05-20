@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
@@ -30,16 +31,35 @@ public class BrowseSelectController extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ProductSubsystem pss = new ProductSubsystemFacade();
+        List<Catalog> catList = new ArrayList<>();
         try {
 
-            List<Catalog> catList = pss.getCatalogList();
-            for(Catalog c:catList){
-                List<Product> prodList = pss.getProductList(c);
-            }
+            catList = pss.getCatalogList();
             request.setAttribute("categories", catList);
-            request.getRequestDispatcher("/products.jsp").forward(request, response);
         } catch (BackendException e) {
             LOG.warning(e.getMessage());
         }
+
+        String selectedCategoryId = request.getParameter("cid");
+        if(selectedCategoryId != null){
+            Catalog selectedCatalog = getCatalogById(Integer.parseInt(selectedCategoryId), catList);
+            try {
+                List<Product> selectedProducts = pss.getProductList(selectedCatalog);
+                request.setAttribute("product_list", selectedProducts);
+            } catch (BackendException e) {
+                LOG.warning(e.getMessage());
+            }
+
+        }
+        request.getRequestDispatcher("/products.jsp").forward(request, response);
+    }
+
+    private Catalog getCatalogById(int i, List<Catalog> catList) {
+        for(Catalog c:catList){
+            if(c.getId() == i){
+                return c;
+            }
+        }
+        return null;
     }
 }

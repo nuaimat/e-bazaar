@@ -1,15 +1,17 @@
 package presentation.control;
 
+import business.exceptions.UnauthorizedException;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.TableView;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import presentation.data.OrderPres;
-import presentation.data.SessionCache;
 import presentation.data.ViewOrdersData;
 import presentation.gui.OrderDetailWindow;
 import presentation.gui.OrdersWindow;
+import presentation.util.CacheReader;
 
 public enum ViewOrdersUIControl {
 	INSTANCE;
@@ -24,15 +26,38 @@ public enum ViewOrdersUIControl {
 		startScreenCallback = returnMessage;
 	}
 	
-	private class ViewOrdersHandler implements EventHandler<ActionEvent> {
+	private class ViewOrdersHandler implements EventHandler<ActionEvent>, Callback {
 		
 		@Override
 		public void handle(ActionEvent evt) {
 			ordersWindow = new OrdersWindow(primaryStage);
+			boolean isLoggedIn = CacheReader.readLoggedIn();
+			if (!isLoggedIn) {
+				LoginUIControl loginControl = new LoginUIControl(ordersWindow,
+						primaryStage, this);
+				loginControl.startLogin();
+			} else {
+				doUpdate();
+			}
+		}
+
+		@Override
+		public void doUpdate() {
+			try {
+				Authorization.checkAuthorization(ordersWindow, CacheReader.custIsAdmin());
+			} catch(UnauthorizedException e) {
+				displayError(e.getMessage());
+				return;
+			}
 			ordersWindow.setData(FXCollections.observableList(ViewOrdersData.INSTANCE.getOrders()));
+			primaryStage.hide();
 			ordersWindow.show();
-	        primaryStage.hide();			
-		}	
+		}
+
+		@Override
+		public Text getMessageBar() {
+			return startScreenCallback.getMessageBar();
+		}
 	}
 	public ViewOrdersHandler getViewOrdersHandler() {
 		return new ViewOrdersHandler();

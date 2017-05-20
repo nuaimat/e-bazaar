@@ -6,7 +6,7 @@
             <c:out value="${firstname}" />
         </c:when>
         <c:otherwise>
-            There
+            Guest
         </c:otherwise>
     </c:choose>
 !</h2>

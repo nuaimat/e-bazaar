@@ -2,6 +2,7 @@ package presentation.data;
 
 import business.customersubsystem.CustomerSubsystemFacade;
 import business.externalinterfaces.Order;
+import presentation.util.CacheReader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +22,7 @@ public enum ViewOrdersData {
 	}
 	
 	public List<OrderPres> getOrders() {
-		List<Order> orders = (List<Order>) SessionCache.getInstance().get(SessionCache.CUSTOMER_ORDER_HISTORY);
+		List<Order> orders = CacheReader.readCustomer().getOrderHistory();
 		List<OrderPres> orderPresList = new ArrayList<>();
 		if(orders != null && orders.size() > 0 ){
 			for(Order o:orders){

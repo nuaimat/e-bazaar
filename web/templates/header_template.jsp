@@ -39,9 +39,9 @@
                 <li class="active"><a href="<c:url value="/" />">Home</a></li>
                 <li><a href="<c:url value="/order_history" />">Order History</a></li>
                 <li><a href="<c:url value="/products" />">Products</a></li>
-                <%--
-                <li><a href="<c:url value="/cart" />">Shopping Cart</a></li>
-                <li><a href="#">Stores</a></li>
+                <li><a href="<c:url value="/cart" />">Shopping Cart <span class="badge">2</span> </a></li>
+
+                <%--<li><a href="#">Stores</a></li>
                 <li><a href="#">Contact</a></li> --%>
             </ul>
             <c:if test="${not empty sessionScope.cust_firstname}" var="loggedInUser" scope="request" />

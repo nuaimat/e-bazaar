@@ -10,6 +10,7 @@ import business.exceptions.BackendException;
 import business.exceptions.UserException;
 import business.externalinterfaces.CartItem;
 import business.externalinterfaces.CustomerSubsystem;
+import presentation.data.SessionCache;
 
 
 public class LoginControl {
@@ -30,6 +31,7 @@ public class LoginControl {
 		
         //initialize by loading data from database
         cust.initializeCustomer(login.getCustId(), cartItems, authorizationLevel);
+		SessionCache.getInstance().add(SessionCache.CUSTOMER, cust);
         return cust;
 	}
     

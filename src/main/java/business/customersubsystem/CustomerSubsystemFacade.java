@@ -66,7 +66,6 @@ public class CustomerSubsystemFacade implements CustomerSubsystem {
 		//sets any live cart items obtained before login into the ShoppingCartSubsystem's live cart
 		shoppingCartSubsystem.getLiveCart().setCartItems(cartItems);
 		loadOrderData();
-		SessionCache.getInstance().add(SessionCache.CUSTOMER, this);
 	}
 
 	void loadCustomerProfile(int id, boolean isAdmin) throws BackendException {
@@ -110,7 +109,6 @@ public class CustomerSubsystemFacade implements CustomerSubsystem {
 		// retrieve the order history for the customer and store here
 		orderSubsystem = new OrderSubsystemFacade(customerProfile);
 		orderHistory = orderSubsystem.getOrderHistory();
-		SessionCache.getInstance().add(SessionCache.CUSTOMER_ORDER_HISTORY, orderHistory);
 	}
 
 	/**

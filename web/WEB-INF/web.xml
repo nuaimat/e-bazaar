@@ -34,5 +34,15 @@
         <url-pattern>/products</url-pattern>
     </servlet-mapping>
 
+    
+    <servlet>
+        <servlet-name>cartController</servlet-name>
+        <servlet-class>presentation.web.controller.CartController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>cartController</servlet-name>
+        <url-pattern>/cart</url-pattern>
+    </servlet-mapping>
+
 
 </web-app>
