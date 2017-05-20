@@ -5,6 +5,7 @@ import business.customersubsystem.CustomerSubsystemFacade;
 import business.exceptions.BackendException;
 import business.exceptions.UserException;
 import business.externalinterfaces.CustomerSubsystem;
+import presentation.data.BrowseSelectData;
 import presentation.data.LoginData;
 import presentation.data.SessionCache;
 import presentation.web.util.WebSession;
@@ -62,7 +63,7 @@ public class LogInController extends HttpServlet {
 		try {
 			int authorizationLevel = loginData.authenticate(login);
 			loginData.loadCustomerForWeb(request.getSession(), login, authorizationLevel);
-
+			request.getSession().setAttribute(SessionCache.SHOP_CART, BrowseSelectData.INSTANCE.obtainCurrentShoppingCartSubsystem());
 			//CustomerSubsystem customerSubsystem = new CustomerSubsystemFacade();
 			WebSession.INSTANCE.sync(request.getSession(), SessionCache.getInstance());
 			loginSuccessful = true;

@@ -2,6 +2,7 @@ package presentation.web.util;
 
 import business.customersubsystem.CustomerSubsystemFacade;
 import business.shoppingcartsubsystem.ShoppingCartSubsystemFacade;
+import presentation.data.BrowseSelectData;
 import presentation.data.SessionCache;
 import presentation.util.CacheReader;
 
@@ -66,6 +67,8 @@ public enum WebSession {
 
         session.removeAttribute("cust_id");
         session.removeAttribute("cust_firstname");
+        BrowseSelectData.INSTANCE.removeFromCart(BrowseSelectData.INSTANCE.getCartData());
+        BrowseSelectData.INSTANCE.updateShoppingCart();
 
     }
 
