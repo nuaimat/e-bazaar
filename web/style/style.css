@@ -1,6 +1,6 @@
 body { padding-top: 70px; }
 
-.table>tbody>tr>td, .table>tfoot>tr>td{
+.table>tbody>tr>td, .table>tfoot>tr>td, .table>thead>tr>th {
     vertical-align: middle;
 }
 @media screen and (max-width: 600px) {

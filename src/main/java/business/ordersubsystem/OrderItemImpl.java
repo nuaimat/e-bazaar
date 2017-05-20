@@ -10,6 +10,8 @@ public class OrderItemImpl implements OrderItem {
 	private int productId;
 	private int quantity;
 	private double unitPrice;
+	private double totalPrice;
+
 	public OrderItemImpl(String name, int quantity, double price) {
 		productName = name;
 		this.quantity = quantity;

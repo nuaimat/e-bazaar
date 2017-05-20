@@ -65,7 +65,14 @@
         <url-pattern>/secure_cart</url-pattern>
     </servlet-mapping>
 
-
+    <servlet>
+        <servlet-name>orderHistoryController</servlet-name>
+        <servlet-class>presentation.web.controller.OrderHistory</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>orderHistoryController</servlet-name>
+        <url-pattern>/order_history</url-pattern>
+    </servlet-mapping>
 
 
 </web-app>

@@ -9,6 +9,7 @@ import business.externalinterfaces.Address;
 import business.externalinterfaces.CreditCard;
 import business.externalinterfaces.Order;
 import business.externalinterfaces.OrderItem;
+import business.util.Convert;
 
 public class OrderImpl implements Order {
 	private List<OrderItem> orderItems;
@@ -17,6 +18,9 @@ public class OrderImpl implements Order {
 	private Address shipAddress;
 	private Address billAddress;
 	private CreditCard creditCard;
+	private String orderDateFormatted;
+	private Double totalPrice;
+
 	public OrderImpl() {
 	}
 
@@ -94,4 +98,7 @@ public class OrderImpl implements Order {
 	}
 
 
+	public String getOrderDateFormatted() {
+		return Convert.localDateAsString(this.date);
+	}
 }
