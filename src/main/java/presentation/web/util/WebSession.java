@@ -32,8 +32,16 @@ public enum WebSession {
             session.removeAttribute("cust_firstname");
             session.removeAttribute("cust_id");
         }
-        session.setAttribute("cart_item_count",
-                ((ShoppingCartSubsystemFacade) session.getAttribute(SessionCache.SHOP_CART)).getLiveCartItems().size());
+
+        if((ShoppingCartSubsystemFacade) session.getAttribute(SessionCache.SHOP_CART) != null &&
+                ((ShoppingCartSubsystemFacade) session.getAttribute(SessionCache.SHOP_CART)).getLiveCartItems() != null
+                ){
+            session.setAttribute("cart_item_count",
+                    ((ShoppingCartSubsystemFacade) session.getAttribute(SessionCache.SHOP_CART)).getLiveCartItems().size());
+        } else {
+            session.setAttribute("cart_item_count", 0);
+        }
+
 
     }
 

@@ -65,8 +65,7 @@ public class LoginData {
 		//made to be static
 		session.setAttribute(SessionCache.LOGGED_IN, true);
 		session.setAttribute(SessionCache.CUSTOMER, customer);
-		session.setAttribute("cust_firstname", customer.getCustomerProfile().getFirstName());
-		session.setAttribute("cust_id", customer.getCustomerProfile().getCustId());
+
 
 		//If a shopping cart already exists in memory,
 		//extract the live cart items and send to Customer
@@ -79,5 +78,8 @@ public class LoginData {
 		usecaseControl.prepareAndStoreCustomerObject(customer, liveCartItems, login, authorizationLevel);
 		//require access of ShoppingCart to go through Customer now
 		session.removeAttribute(SessionCache.SHOP_CART);
+
+		session.setAttribute("cust_firstname", customer.getCustomerProfile().getFirstName());
+		session.setAttribute("cust_id", customer.getCustomerProfile().getCustId());
 	}
 }
