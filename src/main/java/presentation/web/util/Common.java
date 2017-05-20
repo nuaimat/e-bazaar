@@ -44,7 +44,8 @@ public class Common {
 
 
     private static Integer cartItemsCount(HttpSession session) {
-        if((session.getAttribute(SessionCache.SHOP_CART)) != null){
+        if((session.getAttribute(SessionCache.SHOP_CART)) != null &&
+                ((ShoppingCartSubsystem)session.getAttribute(SessionCache.SHOP_CART)).getCartItems() != null    ){
             return ((ShoppingCartSubsystem)session.getAttribute(SessionCache.SHOP_CART))
                     .getCartItems().size();
         }
