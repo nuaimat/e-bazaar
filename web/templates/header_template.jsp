@@ -35,11 +35,11 @@
             <a class="navbar-brand" href="/"><img src="<c:url value="/images/logo.png" />" style="width: 23px"></a>
         </div>
         <div class="collapse navbar-collapse" id="myNavbar">
-            <ul class="nav navbar-nav">
-                <li class="active"><a href="<c:url value="/" />">Home</a></li>
-                <li><a href="<c:url value="/order_history" />">Order History</a></li>
-                <li><a href="<c:url value="/products" />">Products</a></li>
-                <li><a href="<c:url value="/cart" />">Shopping Cart <span class="badge">2</span> </a></li>
+            <ul class="nav navbar-nav" id="navBarLeftLinks">
+                <li class="home-nav-link active"><a href="<c:url value="/" />">Home</a></li>
+                <li class="order-history-nav-link"><a href="<c:url value="/order_history" />">Order History</a></li>
+                <li class="products-nav-link"><a href="<c:url value="/products" />">Products</a></li>
+                <li class="shopping-cart-nav-link"><a href="<c:url value="/cart" />"><span class="glyphicon glyphicon-shopping-cart"></span> Shopping Cart <span class="badge">${sessionScope.cart_item_count}</span> </a></li>
 
                 <%--<li><a href="#">Stores</a></li>
                 <li><a href="#">Contact</a></li> --%>

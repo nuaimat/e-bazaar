@@ -1,10 +1,12 @@
+<%--
+  Created by IntelliJ IDEA.
+  User: nuaimat
+  Date: 5/19/17
+  Time: 10:44 PM
+  To change this template use File | Settings | File Templates.
+--%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<jsp:include page="templates/header_template.jsp"/>
-<form method="get" action="<c:url value="/cart" />" id="add_to_cart_form">
-    <input type="hidden" name="pid" value="0" id="shopping_cart_pid">
-    <input type="hidden" name="method" id="shopping_cart_method" value="add_to_cart">
-</form>
-
+<jsp:include page="templates/header_template.jsp" />
 <div class="container-fluid">
     <div class="row">
         <div class="col-sm-3 col-lg-2">
@@ -34,30 +36,14 @@
             </div>
         </div>
         <div class="col-sm-9 col-lg-10 products-container">
-            <c:if test="${empty product_list}">
-                <div class="jumbotron">
-                    <h1>e-Bazaar</h1>
-                    <p>Select a catalog from left navigation</p>
-                </div>
-            </c:if>
-
-            <!-- start product listing -->
+            <!-- start product det -->
             <div class="row">
-                <c:set var="product_count" value="0" scope="page"/>
-                <c:forEach items="${product_list}" var="product">
-                    <c:if test="${product_count % 3 == 0}"><div class="row"></c:if>
-                    <%-- set variable product and call the panel template --%>
-                    <c:set var="product" value="${product}" scope="request" />
-                    <jsp:include page="/templates/product_panel_template.jsp" />
-                    <c:if test="${product_count % 3 == 2}"></div></c:if>
-                    <c:set var="product_count" value="${product_count + 1}" scope="page"/>
-                </c:forEach>
+                <jsp:include page="templates/product_details.jsp" />
             </div>
-            <!-- end product listing -->
+            <!-- end product det -->
 
         </div>
     </div>
 </div>
 
-
-<jsp:include page="templates/footer_template.jsp"/>
+<jsp:include page="templates/footer_template.jsp" />

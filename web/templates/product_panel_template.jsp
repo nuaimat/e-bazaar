@@ -15,8 +15,15 @@
         </div>
         <div class="panel-footer">${product.productName} for only $<span class="text-primary">${product.unitPrice}</span>
             <div style="text-align: center">
-                <button class="btn btn-success add-to-cart-btn" value="${product.productId}">Add to Cart</button>
-                <button class="btn btn-info more-info-btn" value="${product.productId}">More info</button>
+                <c:choose>
+                    <c:when test="${cart_items_ids.contains(product.productId)}">
+                        <button class="btn btn-warning remove-from-cart-btn" value="${product.productId}">Remove Cart item</button>
+                    </c:when>
+                    <c:otherwise>
+                        <button class="btn btn-success add-to-cart-btn" value="${product.productId}">Add to Cart</button>
+                    </c:otherwise>
+                </c:choose>
+                <button class="btn btn-info more-info-btn cart-item-more-info" value="${product.productId}">More info</button>
             </div>
         </div>
     </div>

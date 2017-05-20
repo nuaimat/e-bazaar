@@ -46,10 +46,14 @@ public class AuthenticationFilter implements Filter {
 
     //basic validation of pages that do not require authentication
     private boolean needsAuthentication(String url, HttpServletRequest request) {
+
         if(url.endsWith(".css") || url.endsWith(".js") || 
         		url.equals(request.getContextPath() + "/login") || 
         		url.equals(request.getContextPath() + "/logout")|| 
-                url.startsWith(request.getContextPath() + "/product")
+                url.startsWith(request.getContextPath() + "/product") ||
+                url.startsWith(request.getContextPath() + "/cart") ||
+                url.equals("/") ||
+                url.startsWith(request.getContextPath() + "/images/")
                 ){
             return false;
         }

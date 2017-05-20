@@ -15,6 +15,9 @@ import business.externalinterfaces.CartItem;
 import business.externalinterfaces.CustomerSubsystem;
 import business.externalinterfaces.ShoppingCart;
 import business.externalinterfaces.ShoppingCartSubsystem;
+import presentation.util.CacheReader;
+
+import javax.servlet.http.HttpSession;
 
 public class LoginData {
 	LoginControl usecaseControl = new LoginControl() ;
@@ -54,4 +57,27 @@ public class LoginData {
         //require access of ShoppingCart to go through Customer now
         cache.remove(SessionCache.SHOP_CART);
     }
+
+	public void loadCustomerForWeb(HttpSession session, Login login, int authorizationLevel) throws BackendException {
+		CustomerSubsystem customer = new CustomerSubsystemFacade();
+		//need to place into SessionContext immediately since the facade will be used during
+		//initialization; alternative: createAddress, createCreditCard methods
+		//made to be static
+		session.setAttribute(SessionCache.LOGGED_IN, true);
+		session.setAttribute(SessionCache.CUSTOMER, customer);
+		session.setAttribute("cust_firstname", customer.getCustomerProfile().getFirstName());
+		session.setAttribute("cust_id", customer.getCustomerProfile().getCustId());
+
+		//If a shopping cart already exists in memory,
+		//extract the live cart items and send to Customer
+		//to put into Customer's live cart
+		ShoppingCartSubsystem shopCartSs = (ShoppingCartSubsystem)session.getAttribute(SessionCache.SHOP_CART);
+		List<CartItem> liveCartItems = new ArrayList<>();
+		if(shopCartSs != null) {
+			liveCartItems = shopCartSs.getLiveCart().getCartItems();
+		}
+		usecaseControl.prepareAndStoreCustomerObject(customer, liveCartItems, login, authorizationLevel);
+		//require access of ShoppingCart to go through Customer now
+		session.removeAttribute(SessionCache.SHOP_CART);
+	}
 }

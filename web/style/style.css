@@ -178,3 +178,8 @@ h2 {
 .products-container > .row {
     margin: 0 15px 5px;
 }
+
+.sidebar-navbar-collapse .navbar-nav li {
+    display: block;
+    clear: left;
+}

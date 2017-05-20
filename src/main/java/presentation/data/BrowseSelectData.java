@@ -19,13 +19,20 @@ import presentation.control.BrowseSelectUIControl;
 import presentation.gui.GuiConstants;
 import presentation.util.CacheReader;
 
+import javax.servlet.http.HttpSession;
+
 public enum BrowseSelectData  {
 	INSTANCE;
 	private static final Logger LOG = Logger.getLogger(BrowseSelectData.class.getName());
+
+	public static enum SETypes {WEB, DESKTOP};
+	public HttpSession webSession;
+
 	//Fields that are maintained as user interacts with UI
 	private CatalogPres selectedCatalog;
 	private ProductPres selectedProduct;
 	private CartItemPres selectedCartItem;
+	private SETypes systemEnvironment = SETypes.DESKTOP;
 	
 	private BrowseAndSelectController controller = new BrowseAndSelectController();
 	
@@ -95,7 +102,7 @@ public enum BrowseSelectData  {
 		//updates the liveCart in ShoppingCartSubsystem
 		updateShoppingCart();
 	}
-	
+
 	public boolean removeFromCart(ObservableList<CartItemPres> toBeRemoved) {
 		if(cartData != null && toBeRemoved != null && !toBeRemoved.isEmpty()) {
 			cartData.remove(toBeRemoved.get(0));
@@ -136,19 +143,36 @@ public enum BrowseSelectData  {
 	
 	
 	 public ShoppingCartSubsystem obtainCurrentShoppingCartSubsystem() {
-		 SessionCache session = SessionCache.getInstance();
-	        ShoppingCartSubsystem cachedCart 
-	           = (ShoppingCartSubsystem)session.get(SessionCache.SHOP_CART);
+		 if(getSystemEnvironment() == SETypes.WEB){
 
-	        CustomerSubsystem cust = (CustomerSubsystem) CacheReader.readCustomer();
-	        
-	        //Return value is not null
-	        ShoppingCartSubsystem retVal =
-	                controller.obtainCurrentShoppingCartSubsystem(cust, cachedCart);
-	        if (cachedCart == null) { //this can happen only if cust==null && extShopCart == null
-	            session.add(SessionCache.SHOP_CART, retVal);
-	        }
-	        return retVal;
+			 ShoppingCartSubsystem cachedCart
+					 = (ShoppingCartSubsystem)webSession.getAttribute(SessionCache.SHOP_CART);
+
+			 CustomerSubsystem cust = (CustomerSubsystem) webSession.getAttribute(SessionCache.CUSTOMER);
+
+			 //Return value is not null
+			 ShoppingCartSubsystem retVal =
+					 controller.obtainCurrentShoppingCartSubsystem(cust, cachedCart);
+			 if (cachedCart == null) { //this can happen only if cust==null && extShopCart == null
+				 webSession.setAttribute(SessionCache.SHOP_CART, retVal);
+			 }
+			 return retVal;
+		 } else {
+			 SessionCache session = SessionCache.getInstance();
+			 ShoppingCartSubsystem cachedCart
+					 = (ShoppingCartSubsystem)session.get(SessionCache.SHOP_CART);
+
+			 CustomerSubsystem cust = (CustomerSubsystem) CacheReader.readCustomer();
+
+			 //Return value is not null
+			 ShoppingCartSubsystem retVal =
+					 controller.obtainCurrentShoppingCartSubsystem(cust, cachedCart);
+			 if (cachedCart == null) { //this can happen only if cust==null && extShopCart == null
+				 session.add(SessionCache.SHOP_CART, retVal);
+			 }
+			 return retVal;
+		 }
+
 	    }
 	
 	
@@ -192,5 +216,17 @@ public enum BrowseSelectData  {
 	}
 	public ShoppingCartSynchronizer getShoppingCartSynchronizer() {
 		return new ShoppingCartSynchronizer();
+	}
+
+	public SETypes getSystemEnvironment() {
+		return systemEnvironment;
+	}
+
+	public void setSystemEnvironment(SETypes systemEnvironment) {
+		this.systemEnvironment = systemEnvironment;
+	}
+
+	public void setWebSession(HttpSession s){
+		this.webSession = s;
 	}
 }

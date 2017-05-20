@@ -4,18 +4,23 @@ import business.exceptions.BackendException;
 import business.externalinterfaces.Catalog;
 import business.externalinterfaces.Product;
 import business.externalinterfaces.ProductSubsystem;
+import business.externalinterfaces.ShoppingCartSubsystem;
 import business.productsubsystem.ProductSubsystemFacade;
+import presentation.data.SessionCache;
+import presentation.web.util.Common;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 /**
  * Created by Mo nuaimat on 5/19/17.
@@ -31,14 +36,9 @@ public class BrowseSelectController extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ProductSubsystem pss = new ProductSubsystemFacade();
-        List<Catalog> catList = new ArrayList<>();
-        try {
 
-            catList = pss.getCatalogList();
-            request.setAttribute("categories", catList);
-        } catch (BackendException e) {
-            LOG.warning(e.getMessage());
-        }
+        List<Catalog> catList = Common.getCategoriesList();
+        request.setAttribute("categories", catList);
 
         String selectedCategoryId = request.getParameter("cid");
         if(selectedCategoryId != null){
@@ -50,6 +50,8 @@ public class BrowseSelectController extends HttpServlet {
                 LOG.warning(e.getMessage());
             }
 
+            List<Integer> cartItemsIds = getCartItemsIds(request.getSession());
+            request.setAttribute("cart_items_ids", cartItemsIds);
         }
         request.getRequestDispatcher("/products.jsp").forward(request, response);
     }
@@ -61,5 +63,16 @@ public class BrowseSelectController extends HttpServlet {
             }
         }
         return null;
+    }
+
+    private List<Integer> getCartItemsIds(HttpSession session){
+        if((session.getAttribute(SessionCache.SHOP_CART)) != null){
+            return ((ShoppingCartSubsystem)session.getAttribute(SessionCache.SHOP_CART))
+                    .getCartItems()
+                    .stream()
+                    .map(cartItem -> cartItem.getProductid())
+                    .collect(Collectors.toList());
+        }
+        return new ArrayList<>();
     }
 }

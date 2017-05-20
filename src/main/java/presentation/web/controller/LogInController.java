@@ -61,7 +61,9 @@ public class LogInController extends HttpServlet {
 		boolean loginSuccessful;
 		try {
 			int authorizationLevel = loginData.authenticate(login);
-			loginData.loadCustomer(login, authorizationLevel);
+			loginData.loadCustomerForWeb(request.getSession(), login, authorizationLevel);
+
+			//CustomerSubsystem customerSubsystem = new CustomerSubsystemFacade();
 			WebSession.INSTANCE.sync(request.getSession(), SessionCache.getInstance());
 			loginSuccessful = true;
 		} catch(UserException | BackendException e) {

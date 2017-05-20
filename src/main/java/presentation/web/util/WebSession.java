@@ -1,5 +1,7 @@
 package presentation.web.util;
 
+import business.customersubsystem.CustomerSubsystemFacade;
+import business.shoppingcartsubsystem.ShoppingCartSubsystemFacade;
 import presentation.data.SessionCache;
 import presentation.util.CacheReader;
 
@@ -15,7 +17,7 @@ public enum WebSession {
 
 
     public void sync(HttpSession session, SessionCache sc){
-        LOG.info("Synchronizing session with web session");
+        /*LOG.info("Synchronizing session with web session");
         String [] keys = {
                 SessionCache.CUSTOMER, SessionCache.CUSTOMER_ORDER_HISTORY,
                 SessionCache.LOGGED_IN, SessionCache.SHOP_CART
@@ -23,15 +25,15 @@ public enum WebSession {
 
         for(String key:keys){
             session.setAttribute(key, sc.get(key));
-        }
+        }*/
 
-        if(CacheReader.readLoggedIn()){
-            session.setAttribute("cust_firstname", CacheReader.readCustomer().getCustomerProfile().getFirstName());
-            session.setAttribute("cust_id", CacheReader.readCustomer().getCustomerProfile().getCustId());
-        } else {
+        if(session.getAttribute(SessionCache.LOGGED_IN) == null ||
+                !(Boolean) session.getAttribute(SessionCache.LOGGED_IN)){
             session.removeAttribute("cust_firstname");
             session.removeAttribute("cust_id");
         }
+        session.setAttribute("cart_item_count",
+                ((ShoppingCartSubsystemFacade) session.getAttribute(SessionCache.SHOP_CART)).getLiveCartItems().size());
 
     }
 
@@ -51,10 +53,15 @@ public enum WebSession {
 
         for(String key:keys){
             session.removeAttribute(key);
+            SessionCache.getInstance().remove(key);
         }
 
         session.removeAttribute("cust_id");
         session.removeAttribute("cust_firstname");
 
+    }
+
+    public CustomerSubsystemFacade getCustomer(HttpSession session) {
+        return (CustomerSubsystemFacade) session.getAttribute(SessionCache.CUSTOMER);
     }
 }
