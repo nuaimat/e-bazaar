@@ -64,6 +64,14 @@ public class CartController extends HttpServlet {
                     retreiveSavedCart(request, response);
                 }
                 break;
+            case "save":
+                if(!WebSession.INSTANCE.isLoggedIn(request.getSession())){
+                    response.sendRedirect(request.getContextPath() + "/secure_cart?action=save");
+                    return;
+                } else {
+                    saveCart(request, response);
+                }
+                break;
             default:
                 listCartItems(request, response);
         }
@@ -71,10 +79,29 @@ public class CartController extends HttpServlet {
 
     }
 
+    private void saveCart(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        ShoppingCartSubsystem shoppingCartSubsystem = (ShoppingCartSubsystemFacade) request.getSession().getAttribute(SessionCache.SHOP_CART);
+
+        try {
+            shoppingCartSubsystem.saveLiveCart();
+            BrowseSelectData.INSTANCE.updateCartData();
+        } catch (BackendException e) {
+            throw new ServletException(e);
+        }
+
+        response.sendRedirect(request.getContextPath() + "/cart?msg=Cart+successfully+saved.");
+    }
+
     private void retreiveSavedCart(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ShoppingCartSubsystem shoppingCartSubsystem = (ShoppingCartSubsystemFacade) request.getSession().getAttribute(SessionCache.SHOP_CART);
 
-        shoppingCartSubsystem.makeSavedCartLive();
+        try {
+            shoppingCartSubsystem.retrieveSavedCart();
+            shoppingCartSubsystem.makeSavedCartLive();
+            BrowseSelectData.INSTANCE.updateCartData();
+        } catch (BackendException e) {
+            throw new ServletException(e);
+        }
 
         response.sendRedirect(request.getContextPath() + "/cart");
     }

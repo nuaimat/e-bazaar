@@ -105,7 +105,7 @@ public enum BrowseSelectData  {
 
 	public boolean removeFromCart(ObservableList<CartItemPres> toBeRemoved) {
 		if(cartData != null && toBeRemoved != null && !toBeRemoved.isEmpty()) {
-			cartData.remove(toBeRemoved.get(0));
+			cartData.removeAll(toBeRemoved);
 			updateShoppingCart();
 			return true;
 		}
