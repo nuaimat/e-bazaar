@@ -1,5 +1,7 @@
 package presentation.web.filter;
 
+import business.externalinterfaces.CustomerSubsystem;
+import presentation.data.SessionCache;
 import presentation.web.util.WebSession;
 
 import javax.servlet.*;
@@ -31,19 +33,33 @@ public class AuthenticationFilter implements Filter {
             throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
-        HttpSession session = request.getSession(false);
+        HttpSession session = request.getSession();
 
         String requestPath = request.getRequestURI();
         boolean isLoggedIn = WebSession.INSTANCE.isLoggedIn(request.getSession());
+        boolean isAdmin = false;
 
-        if (needsAuthentication(requestPath, request) && !isLoggedIn) {
+        if(session.getAttribute(SessionCache.CUSTOMER) != null){
+            CustomerSubsystem css = (CustomerSubsystem) session.getAttribute(SessionCache.CUSTOMER);
+            isAdmin = css.getCustomerProfile().isAdmin();
+        }
+
+        if (needsAdmin(requestPath, request) && !isAdmin){
+            LOG.info("Redirecting to " + request.getContextPath() + "/login");
+            session.setAttribute("login_redirect_to", getRequestURL(request));
+            response.sendRedirect(request.getContextPath() + "/login?errorMsg=Admin+protected+rea");
+            return;
+        } else if (needsAuthentication(requestPath, request) && !isLoggedIn) {
         	LOG.info("Redirecting to " + request.getContextPath() + "/login");
             session.setAttribute("login_redirect_to", getRequestURL(request));
             response.sendRedirect(request.getContextPath() + "/login");
+            return;
         } else {
             chain.doFilter(req, res); // Logged-in user found, so just continue request.
         }
     }
+
+
 
     private String getRequestURL(HttpServletRequest request) {
         String str=request.getRequestURL()+"?";
@@ -77,6 +93,10 @@ public class AuthenticationFilter implements Filter {
             return false;
         }
         return true; // for everything else
+    }
+
+    private boolean needsAdmin(String url, HttpServletRequest request) {
+        return url.startsWith(request.getContextPath() + "/admin_");
     }
 
     @Override

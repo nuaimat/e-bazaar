@@ -40,6 +40,7 @@
             <legend>Restricted Area</legend>
             <c:choose>
                 <c:when test="${not empty param.msg}"><p class="error">${param.msg}</p></c:when>
+                <c:when test="${not empty param.errorMsg}"><p class="error">${param.errorMsg}</p></c:when>
                 <c:otherwise><p>Login required to access this area</p></c:otherwise>
             </c:choose>
 

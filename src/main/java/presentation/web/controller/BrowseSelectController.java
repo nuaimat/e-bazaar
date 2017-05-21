@@ -31,10 +31,143 @@ public class BrowseSelectController extends HttpServlet {
 
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        String method = request.getParameter("method");
+        if(method == null){
+            method = "browse";
+        }
+
+        switch (method){
+            case "new_cat":
+                if(!Common.isAdmin(session)){
+                    response.sendRedirect(request.getContextPath() + "/admin_products?method=manage_catalogues");
+                } else {
+                    addNewCatalogue(request, response);
+                }
+                break;
+            case "del_cat":
+                if(!Common.isAdmin(session)){
+                    response.sendRedirect(request.getContextPath() + "/admin_products?method=manage_catalogues");
+                } else {
+                    deleteCatalogue(request, response);
+                }
+                break;
+            case "save_cat":
+                if(!Common.isAdmin(session)){
+                    response.sendRedirect(request.getContextPath() + "/admin_products?method=manage_catalogues");
+                } else {
+                    updateCatalogue(request, response);
+                }
+                break;
+            default:
+                response.sendRedirect(request.getContextPath() + "/admin_products?method=manage_catalogues&msg=Invalid+action");
+
+        }
+    }
+
+    private void updateCatalogue(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        ProductSubsystem pss = new ProductSubsystemFacade();
+        int catalogueId = Integer.parseInt(request.getParameter("id"));
+        if(catalogueId > 0){
+            try {
+                Catalog cat = Common.getCatalogueById(catalogueId);
+                if(cat == null) {
+                    throw new ServletException("Catalogue not found!");
+                }
+                String catName = request.getParameter("name");
+                if(catName == null) {
+                    throw new ServletException("Invalid Catalogue Name!");
+                }
+                cat.setName(catName);
+                pss.updateCatalog(cat);
+            } catch (BackendException e) {
+                throw new ServletException(e.getMessage());
+            }
+        }
+
+        response.sendRedirect(request.getContextPath() + "/admin_products?method=manage_catalogues&msg=Successfully+Updated");
+
+    }
+
+    private void deleteCatalogue(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        ProductSubsystem pss = new ProductSubsystemFacade();
+        int catalogueId = Integer.parseInt(request.getParameter("id"));
+        if(catalogueId > 0){
+            try {
+                Catalog cat = Common.getCatalogueById(catalogueId);
+                if(cat == null) {
+                    throw new ServletException("Catalogue not found!");
+                }
+                pss.deleteCatalog(cat);
+            } catch (BackendException e) {
+                throw new ServletException(e.getMessage());
+            }
+        }
+
+        response.sendRedirect(request.getContextPath() + "/admin_products?method=manage_catalogues&msg=Successfully+Deleted");
+
+    }
+
+    private void addNewCatalogue(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        ProductSubsystem pss = new ProductSubsystemFacade();
+        String catalogueName = request.getParameter("name");
+        if(catalogueName != null){
+            try {
+                pss.saveNewCatalog(catalogueName);
+            } catch (BackendException e) {
+                throw new ServletException(e.getMessage());
+            }
+        }
+
+        response.sendRedirect(request.getContextPath() + "/admin_products?method=manage_catalogues&msg=Successfully+Added");
 
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        String method = request.getParameter("method");
+        if(method == null){
+            method = "browse";
+        }
+        HttpSession session = request.getSession();
+
+        switch (method){
+            case "manage_catalogues":
+                if(!Common.isAdmin(session)){
+                    response.sendRedirect(request.getContextPath() + "/admin_products?action=" + method);
+                } else {
+                    displayManageCatalogues(request, response);
+                }
+                break;
+            case "edit_catalogues":
+                if(!Common.isAdmin(session)){
+                    response.sendRedirect(request.getContextPath() + "/admin_products?action=manage_catalogues");
+                } else {
+                    displayEditCatalogues(request, response);
+                }
+                break;
+            default:
+                display_products(request, response);
+        }
+
+
+    }
+
+    private void displayEditCatalogues(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        int id = Integer.parseInt(request.getParameter("catid"));
+        request.setAttribute("method","edit_cat");
+        request.setAttribute("catid",id);
+        displayManageCatalogues(request, response);
+    }
+
+    private void displayManageCatalogues(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        ProductSubsystem pss = new ProductSubsystemFacade();
+        List<Catalog> catList = Common.getCategoriesList();
+        request.setAttribute("categories", catList);
+        request.getRequestDispatcher("/manage_categories.jsp").forward(request, response);
+    }
+
+    private void display_products(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ProductSubsystem pss = new ProductSubsystemFacade();
 
         List<Catalog> catList = Common.getCategoriesList();

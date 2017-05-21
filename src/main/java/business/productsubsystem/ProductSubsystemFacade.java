@@ -143,7 +143,13 @@ public class ProductSubsystemFacade implements ProductSubsystem {
 
 	@Override
 	public void deleteCatalog(Catalog catalog) throws BackendException {
-		// do nothing for now
+		try {
+			DbClassCatalog dbclass = new DbClassCatalog();
+			dbclass.deleteCatalog(catalog.getId());
+			return;
+		} catch(DatabaseException e) {
+			throw new BackendException(e);
+		}
 	}
 
 	public DbClassProductForTest getGenericDbClassProduct() {
@@ -153,6 +159,17 @@ public class ProductSubsystemFacade implements ProductSubsystem {
 	@Override
 	public DbClassCatalogForTest getGenericDbClassCatalog() {
 		return new DbClassCatalog();
+	}
+
+	@Override
+	public void updateCatalog(Catalog cat) throws BackendException {
+		try {
+			DbClassCatalog dbclass = new DbClassCatalog();
+			dbclass.updateCatalogName(cat.getId(), cat.getName());
+			return;
+		} catch(DatabaseException e) {
+			throw new BackendException(e);
+		}
 	}
 
 

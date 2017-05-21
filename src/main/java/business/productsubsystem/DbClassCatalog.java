@@ -23,7 +23,9 @@ import middleware.externalinterfaces.DbConfigKey;
  */
 class DbClassCatalog implements DbClass, DbClassCatalogForTest {
 
-	enum Type {LOAD_CATALOG_TABLE, INSERT, READ_CATALOG, READ_CATALOG_BY_NAME, DELETE_CATALOG};
+
+
+	enum Type {LOAD_CATALOG_TABLE, INSERT, READ_CATALOG, READ_CATALOG_BY_NAME, UPDATE_CATALOG, DELETE_CATALOG};
 	@SuppressWarnings("unused")
 	private static final Logger LOG = 
 		Logger.getLogger(DbClassCatalog.class.getPackage().getName());
@@ -37,9 +39,10 @@ class DbClassCatalog implements DbClass, DbClassCatalogForTest {
 	private String readCatalogQuery = "SELECT * FROM CatalogType WHERE catalogid = ?";
 	private String readAllCatalogesQuery = "SELECT * FROM CatalogType";
 	private String deleteCatalogQuery = "DELETE FROM CatalogType WHERE catalogid = ?";
+	private String updateCatalogQuery = "UPDATE CatalogType set catalogname = ? WHERE catalogid = ?";
 
-	private Object[] insertParams, loadCatalogTableParams, readCatalogParams, deleteCatalogParams;
-	private int[] insertTypes, loadCatalogTableTypes, readCatalogTypes, deleteCatalogTypes;
+	private Object[] insertParams, loadCatalogTableParams, readCatalogParams, deleteCatalogParams, updateCatalogParams;
+	private int[] insertTypes, loadCatalogTableTypes, readCatalogTypes, deleteCatalogTypes, updateCatalogTypes;
 	private static TwoKeyHashMap<Integer, String, Catalog> catalogTable;
 
 	private Catalog catalog;
@@ -70,6 +73,8 @@ class DbClassCatalog implements DbClass, DbClassCatalogForTest {
 				return readCatalogByNameQuery;
 			case DELETE_CATALOG:
 				return deleteCatalogQuery;
+			case UPDATE_CATALOG:
+				return updateCatalogQuery;
 			default:
 				return null;
 		}
@@ -81,6 +86,8 @@ class DbClassCatalog implements DbClass, DbClassCatalogForTest {
    				return insertParams;
 			case DELETE_CATALOG:
 				return deleteCatalogParams;
+			case UPDATE_CATALOG:
+				return updateCatalogParams;
    			default:
    				return null;
    		}
@@ -92,6 +99,8 @@ class DbClassCatalog implements DbClass, DbClassCatalogForTest {
 				return insertTypes;
 			 case DELETE_CATALOG:
 				 return deleteCatalogTypes;
+			 case UPDATE_CATALOG:
+				 return updateCatalogTypes;
 			default:
 				return null;
 		}
@@ -153,5 +162,12 @@ class DbClassCatalog implements DbClass, DbClassCatalogForTest {
 
 	}
 
+	public void updateCatalogName(int id, String name) throws DatabaseException {
+		queryType = Type.UPDATE_CATALOG;
+		updateCatalogParams = new Object[]{name, id};
+		updateCatalogTypes = new int[] {Types.VARCHAR, Types.INTEGER};
+
+		dataAccessSS.updateWithinTransaction(this);
+	}
 
 }

@@ -1,10 +1,7 @@
 package presentation.web.util;
 
 import business.exceptions.BackendException;
-import business.externalinterfaces.CartItem;
-import business.externalinterfaces.Catalog;
-import business.externalinterfaces.ProductSubsystem;
-import business.externalinterfaces.ShoppingCartSubsystem;
+import business.externalinterfaces.*;
 import business.productsubsystem.ProductSubsystemFacade;
 import business.shoppingcartsubsystem.ShoppingCartSubsystemFacade;
 import javafx.collections.FXCollections;
@@ -35,6 +32,10 @@ public class Common {
             SessionCache.getInstance().remove(SessionCache.SHOP_CART);
             SessionCache.getInstance().add(SessionCache.SHOP_CART, shoppingCartSubsystem);
         }
+
+
+        session.setAttribute("is_admin", isAdmin(session));
+
         session.setAttribute("cart_item_count", cartItemsCount(session));
 
         BrowseSelectData.INSTANCE.setSystemEnvironment(BrowseSelectData.SETypes.WEB);
@@ -65,4 +66,22 @@ public class Common {
     }
 
 
+    public static boolean isAdmin(HttpSession session) {
+        boolean isAdmin = false;
+        if(session.getAttribute(SessionCache.CUSTOMER) != null){
+            CustomerSubsystem css = (CustomerSubsystem) session.getAttribute(SessionCache.CUSTOMER);
+            isAdmin = css.getCustomerProfile().isAdmin();
+        }
+        return isAdmin;
+    }
+
+    public static Catalog getCatalogueById(int catalogueId) {
+        List<Catalog> catList = getCategoriesList();
+        for(Catalog c:catList){
+            if(c.getId() == catalogueId){
+                return c;
+            }
+        }
+        return null;
+    }
 }

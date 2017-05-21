@@ -38,4 +38,6 @@ public interface ProductSubsystem {
 	/* for testing */
 	public DbClassProductForTest getGenericDbClassProduct();
 	public DbClassCatalogForTest getGenericDbClassCatalog();
+
+	void updateCatalog(Catalog cat) throws BackendException;
 }
