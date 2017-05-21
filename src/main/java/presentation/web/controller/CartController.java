@@ -72,11 +72,23 @@ public class CartController extends HttpServlet {
                     saveCart(request, response);
                 }
                 break;
+            case "clear":
+                clearCart(request, response);
+                break;
             default:
                 listCartItems(request, response);
         }
 
 
+    }
+
+    private void clearCart(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        ShoppingCartSubsystem shoppingCartSubsystem = (ShoppingCartSubsystemFacade) request.getSession().getAttribute(SessionCache.SHOP_CART);
+
+        shoppingCartSubsystem.clearLiveCart();
+        BrowseSelectData.INSTANCE.updateCartData();
+
+        response.sendRedirect(request.getContextPath() + "/cart?msg=Cart+successfully+cleared.");
     }
 
     private void saveCart(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

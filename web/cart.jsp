@@ -46,6 +46,13 @@
             <!-- start product det -->
             <div class="row">
                 <h3><span class="glyphicon glyphicon-shopping-cart"></span> Shopping Cart</h3>
+                <c:if test="${not empty param.msg}">
+                    <div class="alert alert-success alert-dismissable">
+                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        ${param.msg}
+                    </div>
+                </c:if>
+
                 <table class="table table-hover">
                     <thead>
                     <tr>
