@@ -1,6 +1,7 @@
 package presentation.web.controller;
 
 import business.exceptions.BackendException;
+import business.exceptions.BusinessException;
 import business.externalinterfaces.*;
 import business.productsubsystem.ProductImpl;
 import business.productsubsystem.ProductSubsystemFacade;
@@ -195,7 +196,7 @@ public class CartController extends HttpServlet {
         response.sendRedirect(referrer);
     }
 
-    private void updateItemQuantity(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    private void updateItemQuantity(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         int prodid = Integer.parseInt(request.getParameter("pid"));
         int quantity = Integer.parseInt(request.getParameter("quantity"));
 
@@ -224,10 +225,16 @@ public class CartController extends HttpServlet {
                 break;
             }
         }
+
         shoppingCartSubsystem.getLiveCart().setCartItems(list);
         BrowseSelectData.INSTANCE.updateCartData();
-
         WebSession.INSTANCE.sync(request.getSession(), SessionCache.getInstance());
+
+        /*try {
+            shoppingCartSubsystem.runShoppingCartRules();
+        } catch (BusinessException e) {
+            throw new ServletException(e.getMessage());
+        }*/
 
         String referrer = request.getHeader("referer");
         response.sendRedirect(referrer);

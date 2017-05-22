@@ -1,6 +1,7 @@
 package presentation.web.controller;
 
 import business.exceptions.BackendException;
+import business.exceptions.BusinessException;
 import business.externalinterfaces.CustomerSubsystem;
 import business.externalinterfaces.Product;
 import business.externalinterfaces.ProductSubsystem;
@@ -16,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -58,10 +60,20 @@ public class CheckoutController extends HttpServlet {
         ShoppingCartSubsystem cachedCart
                 = (ShoppingCartSubsystem)session.getAttribute(SessionCache.SHOP_CART);
 
+        try {
+            cachedCart.runShoppingCartRules();
+        } catch (BusinessException e) {
+            //throw new ServletException(e.getMessage());
+            response.sendRedirect(request.getContextPath() + "/cart?errormsg="+ URLEncoder.encode(e.getMessage(),"UTF-8"));
+            return;
+        }
+
         CustomerSubsystem customerSubsystem = WebSession.INSTANCE.getCustomer(session);
 
 
         ProductSubsystem pss = new ProductSubsystemFacade();
+
+
         Map<Integer, Double> prod_price = new HashMap<>();
         if(cachedCart.getCartItems() != null){
             prod_price = cachedCart.getCartItems()
