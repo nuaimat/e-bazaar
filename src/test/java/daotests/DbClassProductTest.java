@@ -1,10 +1,8 @@
 package daotests;
 
 import alltests.AllTests;
-import business.externalinterfaces.Catalog;
-import business.externalinterfaces.DbClassProductForTest;
-import business.externalinterfaces.Product;
-import business.externalinterfaces.ProductSubsystem;
+import business.externalinterfaces.*;
+import business.productsubsystem.CatalogImpl;
 import business.productsubsystem.ProductImpl;
 import business.productsubsystem.ProductSubsystemFacade;
 import business.util.Convert;
@@ -39,6 +37,23 @@ public class DbClassProductTest extends TestCase {
 		} finally {
 			DbQueries.deleteProductRow(prodId);
 		}
+	}
+	public void testSaveNewCatalog() {
+		ProductSubsystem psc = new ProductSubsystemFacade();
+		DbClassCatalogForTest dbclass = psc.getGenericDbClassCatalog();
+//		Catalog c = new MockCatalog();
+//		c.setId(1); //this might break
+//
+		Catalog catalog = new CatalogImpl(0, "Test Catalog");
+//		Integer prodId = -1;
+//		try{
+//			prodId =  dbclass.saveNewProductForTest(product, c);
+//			assertTrue(prodId > 0);
+//		}catch(Exception ex){
+//			fail("Cannot save a new product");
+//		} finally {
+//			DbQueries.deleteProductRow(prodId);
+//		}
 	}
 	
 	public void testDeleteProduct() {
