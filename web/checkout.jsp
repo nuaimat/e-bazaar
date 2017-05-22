@@ -26,17 +26,16 @@
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                         </button>
-                        <span class="visible-xs navbar-brand"><span class="glyphicon glyphicon-shopping-cart"></span> Shopping Cart</span>
+                        <span class="visible-xs navbar-brand"><span class="glyphicon glyphicon-road"></span> Checkout</span>
                     </div>
                     <div class="navbar-collapse collapse sidebar-navbar-collapse">
                         <div class="navbar-header">
-                            <a class="hidden-xs navbar-brand" href="#"><span class="glyphicon glyphicon-shopping-cart"></span> Shopping Cart</a>
+                            <a class="hidden-xs navbar-brand" href="#"><span class="glyphicon glyphicon-road"></span> Checkout</a>
                         </div>
                         <ul class="nav navbar-nav">
-                            <li><a href="<c:url value="/secure_cart" />?method=retrieveSavedCart">Retreive Saved
-                                Cart</a></li>
-                            <li><a href="<c:url value="/secure_cart" />?method=save">Save Cart</a></li>
-                            <li><a href="<c:url value="/cart" />?method=clear">Clear Cart</a></li>
+                            <li>1. Confirm Addresses</li>
+                            <li>2. Confirm Payment</li>
+                            <li>3. Final Review</li>
                         </ul>
                     </div><!--/.nav-collapse -->
                 </div>
@@ -45,14 +44,16 @@
         <div class="col-sm-8 col-lg-9 products-container">
             <!-- start product det -->
             <div class="row">
-                <h3><span class="glyphicon glyphicon-shopping-cart"></span> Shopping Cart</h3>
+                <h3><span class="glyphicon glyphicon-road"></span> Checkout</h3>
                 <c:if test="${not empty param.msg}">
                     <div class="alert alert-success alert-dismissable">
                         <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
                         ${param.msg}
                     </div>
                 </c:if>
-
+                <div class="page-header">
+                    <h4>Items: </h4>
+                </div>
                 <table class="table table-hover">
                     <thead>
                     <tr>
@@ -70,14 +71,12 @@
                         <tr id="shopping-cart-item-${item.productid}">
                             <td>${item.productName}&nbsp;<a href="<c:url value="/cart?pid=${item.productid}&method=display_product" /> "><span class="glyphicon glyphicon-info-sign"></span></a></td>
                             <td>
-                                <input type="number" class="form-control text-center shopping-cart-item-quantity" value="${item.quantity}">
+                                    ${item.quantity}
                             </td>
                             <td><fmt:formatNumber value="${prod_price[item.productid]}" type="currency"/></td>
                             <td><fmt:formatNumber value="${item.totalprice}" type="currency"/></td>
                             <c:set var="grand_total" value="${grand_total + item.totalprice}" />
                             <td class="actions" data-th="">
-                                <button class="btn btn-info btn-sm shopping-cart-save-quantity" value="${item.productid}"><i class="fa fa-floppy-o"></i></button>
-                                <button class="btn btn-danger btn-sm shopping-cart-remove-item" value="${item.productid}"><i class="fa fa-trash-o"></i></button>
                             </td>
                         </tr>
                     </c:forEach>
@@ -86,17 +85,39 @@
                         <th>Grand total</th>
                         <td><fmt:formatNumber value="${grand_total}" type="currency"/></td>
                     </tr>
-                    <tr>
-                        <td><a href="<c:url value="/products" />" class="btn btn-warning"><i class="fa fa-angle-left"></i> Continue Shopping</a></td>
-                        <td class="hidden-xs"></td>
-                        <td class="hidden-xs text-center"></td>
-                        <td><a href="<c:url value="/secure_checkout" />" class="btn btn-success btn-block">Checkout <i class="fa fa-angle-right"></i></a></td>
-                    </tr>
                     </tbody>
                 </table>
 
             </div>
-            <!-- end product det -->
+            <div class=row">
+                <div class="page-header">
+                    <h4>Addresses: </h4>
+                </div>
+
+                <div class="col-sm-6 col-lg-6">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Shipping</div>
+                        <div class="panel-body">Shipping Content</div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-lg-6">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Billing</div>
+                        <div class="panel-body">Billing Content</div>
+                    </div>
+                </div>
+
+            </div>
+            <table class="table">
+                <tbody>
+                <tr>
+                    <td><a href="<c:url value="/cart" />" class="btn btn-warning"><i class="fa fa-angle-left"></i> Back to Shopping Cart</a></td>
+                    <td class="hidden-xs"></td>
+                    <td class="hidden-xs text-center"></td>
+                    <td><a href="<c:url value="/secure_checkout?method=show_payment" />" class="btn btn-success btn-block">Proceed to payment <i class="fa fa-angle-right"></i></a></td>
+                </tr>
+                </tbody>
+            </table>
 
         </div>
     </div>

@@ -121,8 +121,12 @@ public enum BrowseSelectData  {
 	/** Used to update cartData (in this class) when shopping cart subsystem is changed at back end */
 	public void updateCartData() {
 		List<CartItem> cartItems = new ArrayList<CartItem>();
-		List<CartItem> newlist = obtainCurrentShoppingCartSubsystem().getCartItems();
-		if(newlist != null) cartItems = newlist;
+		try {
+			List<CartItem> newlist = obtainCurrentShoppingCartSubsystem().getCartItems();
+			if(newlist != null) cartItems = newlist;
+		} catch (Exception e) {
+			cartItems = new ArrayList<CartItem>();
+		}
 		cartData = FXCollections.observableList(cartItemsToCartItemPres(cartItems));
 		BrowseSelectUIControl.INSTANCE.updateCartItems(cartData);
 	}

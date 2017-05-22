@@ -94,6 +94,9 @@ public class ShoppingCartSubsystemFacade implements ShoppingCartSubsystem {
 	}
 	
 	public List<CartItem> getCartItems() {
+		if(liveCart == null){
+			liveCart = new ShoppingCartImpl(new LinkedList<CartItem>());
+		}
 		return liveCart.getCartItems();
 	}
 	

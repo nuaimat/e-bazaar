@@ -12,7 +12,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>${param.title}</title>
+    <title>
+    <c:choose>
+        <c:when test="${not empty param.title}">
+            ${param.title}
+        </c:when>
+        <c:otherwise>
+            e-Bazaar
+        </c:otherwise>
+    </c:choose>
+    </title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -52,7 +61,7 @@
             <c:choose>
                 <c:when test="${loggedInUser}">
                     <c:set value="Hello ${firstname}" var="welcome_msg" />
-                    <c:set value="/profile" var="profile_link" />
+                    <c:set value="#" var="profile_link" />
                 </c:when>
                 <c:otherwise>
                     <c:set value="Login" var="welcome_msg" />

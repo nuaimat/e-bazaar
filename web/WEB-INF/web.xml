@@ -75,5 +75,17 @@
         <url-pattern>/order_history</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>checkoutController</servlet-name>
+        <servlet-class>presentation.web.controller.CheckoutController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>checkoutController</servlet-name>
+        <url-pattern>/secure_checkout</url-pattern>
+    </servlet-mapping>
+
+
+
+
 
 </web-app>

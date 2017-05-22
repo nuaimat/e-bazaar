@@ -20,7 +20,12 @@ class ShoppingCartImpl implements ShoppingCart {
 	private String cartId;
       
     ShoppingCartImpl(List<CartItem> cartItems) {
-        this.cartItems = cartItems;
+        if(cartItems != null) {
+            this.cartItems = cartItems;
+        } else {
+            this.cartItems = new ArrayList<>();
+        }
+
     }
     ShoppingCartImpl(){
     	cartItems = new ArrayList<CartItem>();
