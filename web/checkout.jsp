@@ -33,9 +33,9 @@
                             <a class="hidden-xs navbar-brand" href="#"><span class="glyphicon glyphicon-road"></span> Checkout</a>
                         </div>
                         <ul class="nav navbar-nav">
-                            <li>1. Confirm Addresses</li>
-                            <li>2. Confirm Payment</li>
-                            <li>3. Final Review</li>
+                            <li><a href="<c:url value="/secure_checkout" />">1. Confirm Addresses</a></li>
+                            <li><a href="<c:url value="/secure_checkout" />">2. Confirm Payment</a></li>
+                            <li><a href="<c:url value="/secure_checkout" />">3. Final Review</a></li>
                         </ul>
                     </div><!--/.nav-collapse -->
                 </div>
