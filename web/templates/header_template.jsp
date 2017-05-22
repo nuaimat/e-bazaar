@@ -41,8 +41,8 @@
                 <li class="products-nav-link"><a href="<c:url value="/products" />">Products</a></li>
                 <li class="shopping-cart-nav-link"><a href="<c:url value="/cart" />"><span class="glyphicon glyphicon-shopping-cart"></span> Shopping Cart <span class="badge">${sessionScope.cart_item_count}</span> </a></li>
                 <c:if test="${sessionScope.is_admin}">
-                    <li class="products-nav-link"><a href="<c:url value="/admin_products?method=manage_catalogues" />">Manage Catalogues</a></li>
-                    <li class="products-nav-link"><a href="<c:url value="/admin_products?method=manage_products" />">Manage Products</a></li>
+                    <li class="admin-cat-nav-link"><a href="<c:url value="/admin_products?method=manage_catalogues" />">Manage Catalogues</a></li>
+                    <li class="admin-prod-nav-link"><a href="<c:url value="/admin_products?method=manage_products" />">Manage Products</a></li>
                 </c:if>
                 <%--<li><a href="#">Stores</a></li>
                 <li><a href="#">Contact</a></li> --%>

@@ -10,6 +10,10 @@ $(function () {
             activeLink = "products-nav-link";
         } else if (window.location.pathname.match("\/cart") || window.location.pathname.match("\/secure_cart")) {
             activeLink = "shopping-cart-nav-link";
+        } else if(window.location.pathname.match("\/admin_products") && window.location.toString().match("catalog")) {
+            activeLink = "admin-cat-nav-link";
+        } else if(window.location.pathname.match("\/admin_products") && window.location.toString().match("prod")) {
+            activeLink = "admin-prod-nav-link";
         }
         $("." + activeLink).addClass("active");
 

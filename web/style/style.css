@@ -183,3 +183,7 @@ h2 {
     display: block;
     clear: left;
 }
+
+button i {
+    pointer-events: none;
+}
