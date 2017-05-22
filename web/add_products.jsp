@@ -2,7 +2,6 @@
 <jsp:include page="templates/header_template.jsp"/>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-
 <script>
     $( function() {
         $( "#datepicker" ).datepicker();
@@ -40,7 +39,7 @@
 
             <div class="jumbotron">
                 <h1>e-Bazaar</h1>
-                <p>Editing a product</p>
+                <p>Add a product</p>
             </div>
 
 
@@ -52,7 +51,7 @@
                         <dd><select name="catid">
                             <c:forEach items="${categories}" var="cat">
                                 <c:choose>
-                                    <c:when test="${cat.id eq product.catalog.id}" >
+                                    <c:when test="${cat.id eq param.cid}" >
                                         <c:set var="sel" value="selected='selected'" />
                                     </c:when>
                                     <c:otherwise>
@@ -67,7 +66,7 @@
                         <dd><input type="text" name="name" value="${product.productName}"></dd>
 
                         <dt>Manufacture Date:</dt>
-                        <dd><input type="text" name="mfg_date" value="${product.mfgDateFormatted}" placeholder="mm/dd/yyyy"  id="datepicker"></dd>
+                        <dd><input type="text" name="mfg_date" value="${product.mfgDateFormatted}" placeholder="mm/dd/yyyy" id="datepicker"></dd>
 
                         <dt># items in stock:</dt>
                         <dd><input type="number" name="quantity" value="${product.quantityAvail}"></dd>
@@ -83,7 +82,7 @@
                         <input type="submit" class="btn btn-success" value="Save" />
                     </div>
                     <input type="hidden" name="pid" value="${product.productId}">
-                    <input type="hidden" name="method" value="save_product">
+                    <input type="hidden" name="method" value="do_add_product">
 
                 </form>
             </div>

@@ -55,6 +55,13 @@ public class BrowseSelectController extends HttpServlet {
                     displayEditProducts(request, response);
                 }
                 break;
+            case "add_products":
+                if(!Common.isAdmin(session)){
+                    response.sendRedirect(request.getContextPath() + "/admin_products?method=manage_products");
+                } else {
+                    displayAddProducts(request, response);
+                }
+                break;
             case "manage_catalogues":
                 if(!Common.isAdmin(session)){
                     response.sendRedirect(request.getContextPath() + "/admin_products?method=" + method);
@@ -112,10 +119,33 @@ public class BrowseSelectController extends HttpServlet {
                     updateProduct(request, response);
                 }
                 break;
+            case "do_add_product":
+                if(!Common.isAdmin(session)){
+                    response.sendRedirect(request.getContextPath() + "/admin_products?method=add_products&cid=" + request.getParameter("cid"));
+                } else {
+                    doAddProduct(request, response);
+                }
+                break;
+            case "delete_product":
+                if(!Common.isAdmin(session)){
+                    response.sendRedirect(request.getContextPath() + "/admin_products?method=manage_products&cid=" + request.getParameter("cid"));
+                } else {
+                    deleteProduct(request, response);
+                }
+                break;
             default:
-                response.sendRedirect(request.getContextPath() + "/admin_products?method=manage_catalogues&msg=Invalid+action");
+                response.sendRedirect(request.getContextPath() + "/admin_products?method=manage_products&msg=Invalid+action");
 
         }
+    }
+
+    private void displayAddProducts(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        ProductSubsystem pss = new ProductSubsystemFacade();
+
+        List<Catalog> catList = Common.getCategoriesList();
+        request.setAttribute("categories", catList);
+
+        request.getRequestDispatcher("/add_products.jsp").forward(request, response);
     }
 
     private void updateProduct(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -144,6 +174,53 @@ public class BrowseSelectController extends HttpServlet {
         }
 
         response.sendRedirect(request.getContextPath() +  "/admin_products?method=manage_products&cid=" + cat.getId() + "&msg=Product+Successfully+saved");
+    }
+
+    private void doAddProduct(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        ProductSubsystem pss = new ProductSubsystemFacade();
+
+        List<Catalog> catList = Common.getCategoriesList();
+        request.setAttribute("categories", catList);
+
+
+        int catid = Integer.parseInt(request.getParameter("catid"));
+        Catalog cat = Common.getCatalogueById(catid);
+
+        String prodName = request.getParameter("name");
+        int qa =  Integer.parseInt(request.getParameter("quantity"));
+        double up = Double.parseDouble(request.getParameter("unit_price"));
+        String desc = request.getParameter("description");
+        LocalDate md = Convert.localDateForString(request.getParameter("mfg_date"));
+
+
+        ProductImpl p2 = new ProductImpl(cat, null, prodName, qa, up, md, desc);
+        try {
+            pss.saveNewProduct(p2, cat);
+        } catch (BackendException e) {
+            throw new ServletException(e.getMessage());
+        }
+
+        response.sendRedirect(request.getContextPath() +  "/admin_products?method=manage_products&cid=" + cat.getId() + "&msg=Product+Successfully+saved");
+    }
+
+    private void deleteProduct(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        ProductSubsystem pss = new ProductSubsystemFacade();
+
+        List<Catalog> catList = Common.getCategoriesList();
+        request.setAttribute("categories", catList);
+
+        int pid = Integer.parseInt(request.getParameter("pid"));
+        int cid = Integer.parseInt(request.getParameter("cid"));
+
+        try {
+            Product p = pss.getProductFromId(pid);
+            cid = p.getCatalog().getId();
+            pss.deleteProduct(p);
+        } catch (BackendException e) {
+            throw new ServletException(e.getMessage());
+        }
+
+        response.sendRedirect(request.getContextPath() +  "/admin_products?method=manage_products&cid=" + cid + "&msg=Product+Successfully+deleted");
     }
 
 

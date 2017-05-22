@@ -11,24 +11,19 @@
             window.location = "<c:url value="/admin_products?method=edit_products&cid=${param.cid}&pid=" />" + pid;
         });
 
-        /* $(".cat-save-edit").click(function (btn) {
-            var catid = $(btn.target).val();
-            if(catid.length < 1 || parseInt(catid) < 1){
-                alert("Wrong Catalogue ID");
+        $(".delete-product-btn").click(function (btn) {
+            var pid = $(btn.target).val();
+            if(pid.length < 1 || parseInt(pid) < 1){
+                alert("Missing product ID");
                 return false;
             }
-            var newCatName = $("#catalogue_name").val();
-            if(newCatName == null || catalogue_name.length < 1) {
-                alert("Invalid catalogue name");
-                return false;
-            }
-            submitProdForm("save_cat", catid, newCatName);
-        }); */
 
-        var submitProdForm = function (cmethod, cid, cname) {
+            submitProdForm("delete_product", pid);
+        });
+
+        var submitProdForm = function (cmethod, pid) {
             $("#manage_product_method").val(cmethod);
-            $("#manage_product_pid").val(cid);
-            //$("#form_name").val(cname);
+            $("#manage_product_pid").val(pid);
             $("#manage_product_form").submit();
         }
     });
@@ -36,7 +31,7 @@
 <form method="post" action="<c:url value="/admin_products" />" id="manage_product_form">
     <input type="hidden" name="pid" value="0" id="manage_product_pid">
     <input type="hidden" name="method" id="manage_product_method" value="delete_product">
-    <input type="hidden" name="cid" value="" id="${param.cid}">
+    <input type="hidden" name="cid" value="${param.cid}">
 </form>
 
 <div class="container-fluid">
@@ -80,6 +75,10 @@
                         ${param.msg}
                 </div>
             </c:if>
+            <div class="row">
+                <a href="<c:url value="/admin_products" />?method=add_products&cid=${param.cid}">Add Product <i
+                        class="fa fa-plus-circle" aria-hidden="true"></i> </a></li>
+            </div>
 
             <!-- start product listing -->
             <div class="row">

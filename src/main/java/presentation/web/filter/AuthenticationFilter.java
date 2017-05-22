@@ -47,7 +47,7 @@ public class AuthenticationFilter implements Filter {
         if (needsAdmin(requestPath, request) && !isAdmin){
             LOG.info("Redirecting to " + request.getContextPath() + "/login");
             session.setAttribute("login_redirect_to", getRequestURL(request));
-            response.sendRedirect(request.getContextPath() + "/login?errorMsg=Admin+protected+rea");
+            response.sendRedirect(request.getContextPath() + "/login?errorMsg=Admin+protected+area");
             return;
         } else if (needsAuthentication(requestPath, request) && !isLoggedIn) {
         	LOG.info("Redirecting to " + request.getContextPath() + "/login");
