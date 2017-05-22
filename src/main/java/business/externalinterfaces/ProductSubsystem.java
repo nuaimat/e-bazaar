@@ -2,6 +2,7 @@
 package business.externalinterfaces;
 import java.util.List;
 import business.exceptions.BackendException;
+import business.productsubsystem.ProductImpl;
 
 public interface ProductSubsystem {
 
@@ -40,4 +41,6 @@ public interface ProductSubsystem {
 	public DbClassCatalogForTest getGenericDbClassCatalog();
 
 	void updateCatalog(Catalog cat) throws BackendException;
+
+	void updateProduct(Product p) throws BackendException;
 }

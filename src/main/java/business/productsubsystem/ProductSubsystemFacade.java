@@ -172,5 +172,16 @@ public class ProductSubsystemFacade implements ProductSubsystem {
 		}
 	}
 
+	@Override
+	public void updateProduct(Product p) throws BackendException {
+		try {
+			DbClassProduct dbclass = new DbClassProduct();
+			dbclass.updateProduct(p);
+			return;
+		} catch(DatabaseException e) {
+			throw new BackendException(e);
+		}
+	}
+
 
 }

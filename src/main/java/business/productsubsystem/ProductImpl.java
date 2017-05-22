@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 import business.externalinterfaces.*;
+import business.util.Convert;
 import javafx.beans.property.*;
 
 public class ProductImpl implements Product {
@@ -16,6 +17,7 @@ public class ProductImpl implements Product {
     private LocalDate mfgDate;
     private String description;
     private int quantityRequested;
+    private String mfgDateFormatted;
     //convert all non-string types to strings if used in a table; otherwise, don't convert
     public int getQuantityRequested() {
 		return quantityRequested;
@@ -92,4 +94,8 @@ public class ProductImpl implements Product {
 	public void setProductId(int productId) {
 		this.productId = productId;
 	}
+
+    public String getMfgDateFormatted() {
+        return Convert.localDateAsString(mfgDate);
+    }
 }

@@ -31,7 +31,8 @@ class DbClassProduct implements DbClass, DbClassProductForTest {
 		deleteProduct(productId);
 	}
 
-	enum Type {LOAD_PROD_TABLE, READ_PRODUCT, READ_PROD_LIST, SAVE_NEW_PROD, DELETE_PRODUCT};
+
+	enum Type {LOAD_PROD_TABLE, READ_PRODUCT, READ_PROD_LIST, SAVE_NEW_PROD, DELETE_PRODUCT, UPDATE_PRODUCT};
 
 	private static final Logger LOG = Logger.getLogger(DbClassProduct.class
 			.getPackage().getName());
@@ -45,11 +46,14 @@ class DbClassProduct implements DbClass, DbClassProductForTest {
 			"(productname, totalquantity, priceperunit, mfgdate, catalogid, description) VALUES " +
 			"(?, ?, ?, ?, ?, ?)";
 	private String deleteProductQuery = "DELETE from Product WHERE productid = ?";
+	private String updateProductQuery = "update Product set catalogid=?, productname=?, totalquantity=?," +
+			"priceperunit=?, mfgdate=?, description=? " +
+			"WHERE productid = ?";
 
 	private Object[] loadProdTableParams, readProductParams, 
-		readProdListParams, saveNewProdParams, deleteProductParams;
+		readProdListParams, saveNewProdParams, deleteProductParams, updateProductParams;
 	private int[] loadProdTableTypes, readProductTypes, readProdListTypes, 
-	    saveNewProdTypes, deleteProductTypes;
+	    saveNewProdTypes, deleteProductTypes, updateProductTypes;
 	
 	/**
 	 * The productTable matches product ID and product name with
@@ -165,6 +169,8 @@ class DbClassProduct implements DbClass, DbClassProductForTest {
 				return saveNewProdQuery;
 			case DELETE_PRODUCT:
 				return deleteProductQuery;
+			case UPDATE_PRODUCT:
+				return updateProductQuery;
 			default:
 				return null;
 		}
@@ -183,6 +189,8 @@ class DbClassProduct implements DbClass, DbClassProductForTest {
 				return saveNewProdParams;
 			case DELETE_PRODUCT:
 				return deleteProductParams;
+			case UPDATE_PRODUCT:
+				return updateProductParams;
 			default:
 				return null;
 		}
@@ -201,6 +209,8 @@ class DbClassProduct implements DbClass, DbClassProductForTest {
 			return saveNewProdTypes;
 		case DELETE_PRODUCT:
 			return deleteProductTypes;
+		case UPDATE_PRODUCT:
+				return updateProductTypes;
 		default:
 			return null;
 	}
@@ -300,6 +310,26 @@ class DbClassProduct implements DbClass, DbClassProductForTest {
 		} catch (SQLException e) {
 			throw new DatabaseException(e);
 		}
+	}
+
+	/* private String updateProductQuery = "update Product set catalogid=?, productname=?, totalquantity=?," +
+			"priceperunit=?, mfgdate=?, description=? " +
+			"WHERE productid = ?";
+			*/
+	public void updateProduct(Product p) throws DatabaseException {
+		queryType = Type.UPDATE_PRODUCT;
+		updateProductParams = new Object[] {
+				p.getCatalog().getId(), p.getProductName(), p.getQuantityAvail(), p.getUnitPrice(),
+				Convert.localDateAsString(p.getMfgDate()), p.getDescription(),
+				p.getProductId()
+		};
+		updateProductTypes = new int[] {
+				Types.INTEGER, Types.VARCHAR, Types.INTEGER, Types.DOUBLE,
+				Types.VARCHAR, Types.VARCHAR,
+				Types.INTEGER
+		};
+		dataAccessSS.updateWithinTransaction(this);
+		return;
 	}
 	
 }

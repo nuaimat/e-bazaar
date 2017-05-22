@@ -1,11 +1,11 @@
 package presentation.web.controller;
 
 import business.exceptions.BackendException;
-import business.externalinterfaces.Catalog;
-import business.externalinterfaces.Product;
-import business.externalinterfaces.ProductSubsystem;
-import business.externalinterfaces.ShoppingCartSubsystem;
+import business.externalinterfaces.*;
+import business.productsubsystem.ProductImpl;
 import business.productsubsystem.ProductSubsystemFacade;
+import business.rulesubsystem.RulesSubsystemFacade;
+import business.util.Convert;
 import presentation.data.SessionCache;
 import presentation.web.util.Common;
 
@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,6 +30,51 @@ import java.util.stream.Collectors;
 public class BrowseSelectController extends HttpServlet {
     private static final Logger LOG = Logger.getLogger(BrowseSelectController.class.getName());
 
+
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        String method = request.getParameter("method");
+        if(method == null){
+            method = "browse";
+        }
+        HttpSession session = request.getSession();
+
+        switch (method){
+            case "manage_products":
+                if(!Common.isAdmin(session)){
+                    response.sendRedirect(request.getContextPath() + "/admin_products?method=" + method);
+                } else {
+                    displayManageProducts(request, response);
+                }
+                break;
+            case "edit_products":
+                if(!Common.isAdmin(session)){
+                    response.sendRedirect(request.getContextPath() + "/admin_products?method=manage_products");
+                } else {
+                    displayEditProducts(request, response);
+                }
+                break;
+            case "manage_catalogues":
+                if(!Common.isAdmin(session)){
+                    response.sendRedirect(request.getContextPath() + "/admin_products?method=" + method);
+                } else {
+                    displayManageCatalogues(request, response);
+                }
+                break;
+            case "edit_catalogues":
+                if(!Common.isAdmin(session)){
+                    response.sendRedirect(request.getContextPath() + "/admin_products?method=manage_catalogues");
+                } else {
+                    displayEditCatalogues(request, response);
+                }
+                break;
+            default:
+                displayProducts(request, response);
+        }
+
+
+    }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
@@ -59,10 +105,86 @@ public class BrowseSelectController extends HttpServlet {
                     updateCatalogue(request, response);
                 }
                 break;
+            case "save_product":
+                if(!Common.isAdmin(session)){
+                    response.sendRedirect(request.getContextPath() + "/admin_products?method=manage_products");
+                } else {
+                    updateProduct(request, response);
+                }
+                break;
             default:
                 response.sendRedirect(request.getContextPath() + "/admin_products?method=manage_catalogues&msg=Invalid+action");
 
         }
+    }
+
+    private void updateProduct(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        ProductSubsystem pss = new ProductSubsystemFacade();
+
+        List<Catalog> catList = Common.getCategoriesList();
+        request.setAttribute("categories", catList);
+
+        int pid = Integer.parseInt(request.getParameter("pid"));
+
+        int catid = Integer.parseInt(request.getParameter("catid"));
+        Catalog cat = Common.getCatalogueById(catid);
+
+        String prodName = request.getParameter("name");
+        int qa =  Integer.parseInt(request.getParameter("quantity"));
+        double up = Double.parseDouble(request.getParameter("unit_price"));
+        String desc = request.getParameter("description");
+        LocalDate md = Convert.localDateForString(request.getParameter("mfg_date"));
+
+
+        ProductImpl p2 = new ProductImpl(cat, pid, prodName, qa, up, md, desc);
+        try {
+            pss.updateProduct(p2);
+        } catch (BackendException e) {
+            throw new ServletException(e.getMessage());
+        }
+
+        response.sendRedirect(request.getContextPath() +  "/admin_products?method=manage_products&cid=" + cat.getId() + "&msg=Product+Successfully+saved");
+    }
+
+
+    private void displayEditProducts(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        ProductSubsystem pss = new ProductSubsystemFacade();
+
+        List<Catalog> catList = Common.getCategoriesList();
+        request.setAttribute("categories", catList);
+
+        int pid = Integer.parseInt(request.getParameter("pid"));
+        Product p = null;
+        try {
+            p = pss.getProductFromId(pid);
+        } catch (BackendException e) {
+            throw new ServletException(e.getMessage());
+        }
+
+        request.setAttribute("product", p);
+        request.getRequestDispatcher("/edit_products.jsp").forward(request, response);
+    }
+
+    private void displayManageProducts(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        ProductSubsystem pss = new ProductSubsystemFacade();
+
+        List<Catalog> catList = Common.getCategoriesList();
+        request.setAttribute("categories", catList);
+
+        String selectedCategoryId = request.getParameter("cid");
+        if(selectedCategoryId != null){
+            Catalog selectedCatalog = getCatalogById(Integer.parseInt(selectedCategoryId), catList);
+            try {
+                List<Product> selectedProducts = pss.getProductList(selectedCatalog);
+                request.setAttribute("product_list", selectedProducts);
+            } catch (BackendException e) {
+                LOG.warning(e.getMessage());
+            }
+
+            List<Integer> cartItemsIds = getCartItemsIds(request.getSession());
+            request.setAttribute("cart_items_ids", cartItemsIds);
+        }
+        request.getRequestDispatcher("/manage_products.jsp").forward(request, response);
     }
 
     private void updateCatalogue(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -123,36 +245,6 @@ public class BrowseSelectController extends HttpServlet {
 
     }
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-        String method = request.getParameter("method");
-        if(method == null){
-            method = "browse";
-        }
-        HttpSession session = request.getSession();
-
-        switch (method){
-            case "manage_catalogues":
-                if(!Common.isAdmin(session)){
-                    response.sendRedirect(request.getContextPath() + "/admin_products?action=" + method);
-                } else {
-                    displayManageCatalogues(request, response);
-                }
-                break;
-            case "edit_catalogues":
-                if(!Common.isAdmin(session)){
-                    response.sendRedirect(request.getContextPath() + "/admin_products?action=manage_catalogues");
-                } else {
-                    displayEditCatalogues(request, response);
-                }
-                break;
-            default:
-                display_products(request, response);
-        }
-
-
-    }
-
     private void displayEditCatalogues(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int id = Integer.parseInt(request.getParameter("catid"));
         request.setAttribute("method","edit_cat");
@@ -167,7 +259,7 @@ public class BrowseSelectController extends HttpServlet {
         request.getRequestDispatcher("/manage_categories.jsp").forward(request, response);
     }
 
-    private void display_products(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void displayProducts(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ProductSubsystem pss = new ProductSubsystemFacade();
 
         List<Catalog> catList = Common.getCategoriesList();
