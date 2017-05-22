@@ -41,19 +41,16 @@ public class DbClassProductTest extends TestCase {
 	public void testSaveNewCatalog() {
 		ProductSubsystem psc = new ProductSubsystemFacade();
 		DbClassCatalogForTest dbclass = psc.getGenericDbClassCatalog();
-//		Catalog c = new MockCatalog();
-//		c.setId(1); //this might break
-//
-		Catalog catalog = new CatalogImpl(0, "Test Catalog");
-//		Integer prodId = -1;
-//		try{
-//			prodId =  dbclass.saveNewProductForTest(product, c);
-//			assertTrue(prodId > 0);
-//		}catch(Exception ex){
-//			fail("Cannot save a new product");
-//		} finally {
-//			DbQueries.deleteProductRow(prodId);
-//		}
+
+		Integer catId = -1;
+		try{
+            catId =  dbclass.saveNewCatalogForTest("Test Catalog");
+			assertTrue(catId > 0);
+		}catch(Exception ex){
+			fail("Cannot save a new product");
+		} finally {
+			DbQueries.deleteProductRow(catId);
+		}
 	}
 	
 	public void testDeleteProduct() {
