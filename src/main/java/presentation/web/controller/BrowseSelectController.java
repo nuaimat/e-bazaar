@@ -198,7 +198,10 @@ public class BrowseSelectController extends HttpServlet {
         try {
             pss.saveNewProduct(p2, cat);
         } catch (BackendException e) {
-            throw new ServletException(e.getMessage());
+            //throw new ServletException(e.getMessage());
+            String referrer = request.getHeader("referer");
+            response.sendRedirect(referrer + "&errormsg=invalid+product+data");
+            return;
         }
 
         response.sendRedirect(request.getContextPath() +  "/admin_products?method=manage_products&cid=" + cat.getId() + "&msg=Product+Successfully+saved");

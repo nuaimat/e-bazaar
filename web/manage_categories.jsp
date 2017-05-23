@@ -17,7 +17,7 @@
         $(function () {
             $(".cat-submit-new").click(function () {
                 var newCatName = $("#catalogue_name").val();
-                if(newCatName == null || catalogue_name.length < 1) {
+                if(newCatName == null || newCatName.length < 1) {
                     alert("Invalid catalogue name");
                     return;
                 }
@@ -50,7 +50,7 @@
                     return false;
                 }
                 var newCatName = $("#catalogue_name").val();
-                if(newCatName == null || catalogue_name.length < 1) {
+                if(newCatName == null || newCatName.length < 1) {
                     alert("Invalid catalogue name");
                     return false;
                 }
@@ -127,7 +127,7 @@
                     <td>&nbsp;
                     </td>
                     <td>
-                        Name: <input type="text" id="catalogue_name" value="${selected_category.name}">
+                        Name: <input type="text" id="catalogue_name" value="${selected_category.name}" required>
                     </td>
                     <td>
                         <c:choose>

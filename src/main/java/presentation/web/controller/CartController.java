@@ -243,7 +243,7 @@ public class CartController extends HttpServlet {
         WebSession.INSTANCE.sync(request.getSession(), SessionCache.getInstance());
 
         String referrer = request.getHeader("referer");
-        response.sendRedirect(referrer);
+        response.sendRedirect(request.getContextPath() + "/cart");
     }
 
 
@@ -268,7 +268,7 @@ public class CartController extends HttpServlet {
         WebSession.INSTANCE.sync(request.getSession(), SessionCache.getInstance());
 
         String referrer = request.getHeader("referer");
-        response.sendRedirect(referrer);
+        response.sendRedirect(request.getContextPath() + "/cart");
 
         // remove
 
