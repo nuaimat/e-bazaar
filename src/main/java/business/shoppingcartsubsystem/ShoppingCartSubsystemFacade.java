@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
-
-import business.customersubsystem.CreditCardImpl;
 import business.customersubsystem.CustomerSubsystemFacade;
 import business.exceptions.BackendException;
 import business.exceptions.BusinessException;
@@ -139,15 +137,12 @@ public class ShoppingCartSubsystemFacade implements ShoppingCartSubsystem {
 	}
 
 	private CreditCard getSamplePaymentInfoForTest() {
-		 CreditCard cc = new CreditCardImpl("John Snow",
-				 Convert.localDateAsString(
-						 LocalDate.of(2030, 12, 31)
-				 ),
-				 "4111111111111111",
-				 "Visa"
-		 );
-
-		return cc;
+		return CustomerSubsystemFacade.createCreditCard("John Snow",
+				Convert.localDateAsString(
+						LocalDate.of(2030, 12, 31)
+				),
+				"4111111111111111",
+				"Visa");
 	}
 
 	private Address getFacebookAddressForTest() {

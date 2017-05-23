@@ -4,7 +4,7 @@ package business.customersubsystem;
 import business.externalinterfaces.CreditCard;
 
 
-public class CreditCardImpl implements CreditCard {
+class CreditCardImpl implements CreditCard {
     String nameOnCard;
     String expirationDate;
     String cardNum;

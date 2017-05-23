@@ -2,7 +2,7 @@ package middleware.creditverifcation;
 
 import middleware.externalinterfaces.CreditVerificationProfile;
 
-public class CreditVerificationProfileImpl implements CreditVerificationProfile {
+class CreditVerificationProfileImpl implements CreditVerificationProfile {
 	private String firstName;
 	private String lastName;
 	private String street;
