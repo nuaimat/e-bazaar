@@ -41,6 +41,18 @@
                 <h1>e-Bazaar</h1>
                 <p>Add a product</p>
             </div>
+            <c:if test="${not empty param.msg}">
+                <div class="alert alert-success alert-dismissable">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        ${param.msg}
+                </div>
+            </c:if>
+            <c:if test="${not empty param.errormsg}">
+                <div class="alert alert-danger alert-dismissable">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong>Error: </strong> ${param.errormsg}
+                </div>
+            </c:if>
 
 
             <!-- start product listing -->
@@ -63,16 +75,16 @@
                         </select></dd>
 
                         <dt>Name:</dt>
-                        <dd><input type="text" name="name" value="${product.productName}"></dd>
+                        <dd><input type="text" name="name" value="${product.productName}" required></dd>
 
                         <dt>Manufacture Date:</dt>
-                        <dd><input type="text" name="mfg_date" value="${product.mfgDateFormatted}" placeholder="mm/dd/yyyy" id="datepicker"></dd>
+                        <dd><input type="text" name="mfg_date" value="${product.mfgDateFormatted}" placeholder="mm/dd/yyyy" id="datepicker" required></dd>
 
                         <dt># items in stock:</dt>
-                        <dd><input type="number" name="quantity" value="${product.quantityAvail}"></dd>
+                        <dd><input type="number" name="quantity" value="${product.quantityAvail}" required min="1"></dd>
 
                         <dt>Unit Price:</dt>
-                        <dd><input type="number" step="0.01" name="unit_price" value="${product.unitPrice}"></dd>
+                        <dd><input type="number" step="0.01" name="unit_price" value="${product.unitPrice}" required min="0"></dd>
 
                         <dt>Description:</dt>
                         <dd><textarea rows="2" cols="60" name="description">${product.description}</textarea></dd>
