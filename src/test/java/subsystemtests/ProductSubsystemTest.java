@@ -1,6 +1,7 @@
 package subsystemtests;
 
 import alltests.AllTests;
+import business.externalinterfaces.Product;
 import business.externalinterfaces.ProductSubsystem;
 import business.productsubsystem.ProductSubsystemFacade;
 import dbsetup.DbQueries;
@@ -50,6 +51,29 @@ public class ProductSubsystemTest extends TestCase {
 			DbQueries.deleteCatalogRow(Integer.parseInt(insertResult[1]));
 		}
 	
+	}
+	public void testGetProductFromName() {
+		//setup
+		/*
+		 * Returns a String[] with values:
+		 * 0 - query
+		 * 1 - product id
+		 * 2 - product name
+		 */
+		String[] insertResult = DbQueries.insertProductRow();
+		String expected = insertResult[2];
+
+		ProductSubsystem pss = new ProductSubsystemFacade();
+		try {
+			Product product = pss.getProductFromName(expected);
+			assertTrue(product != null);
+
+		} catch(Exception e) {
+			fail("Get Product List failed");
+		} finally {
+			DbQueries.deleteProductRow(Integer.parseInt(insertResult[1]));
+		}
+
 	}
 	
 }
