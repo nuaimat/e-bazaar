@@ -6,6 +6,7 @@ import business.externalinterfaces.*;
 import business.productsubsystem.ProductImpl;
 import business.productsubsystem.ProductSubsystemFacade;
 import business.shoppingcartsubsystem.ShoppingCartSubsystemFacade;
+import business.usecasecontrol.BrowseAndSelectController;
 import presentation.data.BrowseSelectData;
 import presentation.data.CartItemData;
 import presentation.data.CartItemPres;
@@ -21,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -199,6 +201,8 @@ public class CartController extends HttpServlet {
     private void updateItemQuantity(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         int prodid = Integer.parseInt(request.getParameter("pid"));
         int quantity = Integer.parseInt(request.getParameter("quantity"));
+        BrowseAndSelectController controller = new BrowseAndSelectController();
+
 
         ShoppingCartSubsystem shoppingCartSubsystem = (ShoppingCartSubsystemFacade) request.getSession().getAttribute(SessionCache.SHOP_CART);
         if(shoppingCartSubsystem == null){
@@ -212,6 +216,15 @@ public class CartController extends HttpServlet {
             LOG.warning("removeCartItem: " + e.getMessage());
             return;
         }
+
+        try {
+            controller.runQuantityRules(product, ""+quantity);
+        } catch (BusinessException e) {
+            LOG.warning("quantity exceeded supply for prod id: " + product.getProductId());
+            response.sendRedirect(request.getContextPath() + "/cart?msg=" + URLEncoder.encode(e.getMessage(), "UTF-8"));
+            return;
+        }
+
         List<CartItem> list = shoppingCartSubsystem
                 .getLiveCart().getCartItems();
         for(int i=0; i < list.size(); i++){
@@ -229,12 +242,6 @@ public class CartController extends HttpServlet {
         shoppingCartSubsystem.getLiveCart().setCartItems(list);
         BrowseSelectData.INSTANCE.updateCartData();
         WebSession.INSTANCE.sync(request.getSession(), SessionCache.getInstance());
-
-        /*try {
-            shoppingCartSubsystem.runShoppingCartRules();
-        } catch (BusinessException e) {
-            throw new ServletException(e.getMessage());
-        }*/
 
         String referrer = request.getHeader("referer");
         response.sendRedirect(referrer);
