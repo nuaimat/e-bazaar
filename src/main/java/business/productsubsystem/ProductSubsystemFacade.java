@@ -23,7 +23,7 @@ public class ProductSubsystemFacade implements ProductSubsystem {
 			double up, LocalDate md, String desc) {
 		return new ProductImpl(c, pi, pn, qa, up, md, desc);
 	}
-	
+
 	/** obtains product for a given product name */
     public Product getProductFromName(String prodName) throws BackendException {
     	try {

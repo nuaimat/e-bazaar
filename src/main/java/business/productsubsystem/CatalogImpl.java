@@ -3,13 +3,13 @@ package business.productsubsystem;
 import business.externalinterfaces.Catalog;
 
 
-public class CatalogImpl implements Catalog {
+class CatalogImpl implements Catalog {
 	private int id;
 	private String name;
 	public CatalogImpl() {
 		//do nothing
 	}
-	public CatalogImpl(int id, String name) {
+	CatalogImpl(int id, String name) {
 		this.id = id;
 		this.name = name;
 	}
