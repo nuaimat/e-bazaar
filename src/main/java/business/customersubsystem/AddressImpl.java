@@ -9,6 +9,8 @@ class AddressImpl implements Address {
 	private String zip;
 	private boolean isShippingAddress = false;
 	private boolean isBillingAddress = false;
+	private String oneLineRepresentation;
+	private String multiLineRepresentation;
 	
 	AddressImpl(String str, String c, String state, String zip, 
 			boolean isShip, boolean isBill) {
@@ -66,5 +68,22 @@ class AddressImpl implements Address {
 	public void setZip(String zip) {
 		this.zip = zip;
 	}
-	
+
+	public String getOneLineRepresentation() {
+		return String.format("%s - %s - %s %s",
+					this.getStreet(),
+					this.getCity(),
+					this.getState(),
+					this.getZip()
+				).replaceAll("\n", "");
+	}
+
+	public String getMultiLineRepresentation() {
+		return String.format("%s\n%s\n%s %s",
+				this.getStreet(),
+				this.getCity(),
+				this.getState(),
+				this.getZip()
+		);
+	}
 }

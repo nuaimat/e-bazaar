@@ -13,5 +13,7 @@ public interface Address {
     public boolean isShippingAddress();
 	public boolean isBillingAddress();   
 	public void isShippingAddress(boolean b);
-	public void isBillingAddress(boolean b);  
+	public void isBillingAddress(boolean b);
+    public String getOneLineRepresentation();
+    public String getMultiLineRepresentation();
 }

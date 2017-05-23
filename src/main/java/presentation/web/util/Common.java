@@ -1,13 +1,14 @@
 package presentation.web.util;
 
 import business.exceptions.BackendException;
-import business.externalinterfaces.*;
+import business.externalinterfaces.Catalog;
+import business.externalinterfaces.CustomerSubsystem;
+import business.externalinterfaces.ProductSubsystem;
+import business.externalinterfaces.ShoppingCartSubsystem;
 import business.productsubsystem.ProductSubsystemFacade;
 import business.shoppingcartsubsystem.ShoppingCartSubsystemFacade;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import com.google.gson.Gson;
 import presentation.data.BrowseSelectData;
-import presentation.data.CartItemPres;
 import presentation.data.SessionCache;
 
 import javax.servlet.http.HttpServletRequest;
@@ -83,5 +84,10 @@ public class Common {
             }
         }
         return null;
+    }
+
+    public static String writeJSONString(Object o) {
+        String json = new Gson().toJson(o); // anyObject = List<Bean>, Map<K, Bean>, Bean, String, etc..
+        return json;
     }
 }

@@ -31,8 +31,8 @@ class DbClassAddress implements DbClass, DbClassAddressForTest {
 	}
 	///// queries ///////
 	private String insertQuery = "INSERT into altaddress " +
-        		"(custid,street,city,state,zip) " +
-        		"VALUES(?,?,?,?,?)";
+        		"(custid,street,city,state,zip,isship, isbill) " +
+        		"VALUES(?,?,?,?,?,?,?)";
 	private String readAllQuery 
 	     = "SELECT * from altaddress WHERE custid = ?";
 	      //param value to set: custProfile.getCustId()
@@ -68,9 +68,11 @@ class DbClassAddress implements DbClass, DbClassAddressForTest {
     void saveAddress(CustomerProfile custProfile) throws DatabaseException {
         queryType = Type.INSERT;
         insertParams = new Object[]
-        	{custProfile.getCustId(),address.getStreet(), address.getCity(), address.getState(),address.getZip()};
+        	{custProfile.getCustId(),address.getStreet().trim(), address.getCity().trim(), address.getState().trim(),address.getZip().trim(),
+			address.isShippingAddress()?1:0, address.isBillingAddress()?1:0
+			};
         insertTypes = new int[]
-        	{Types.INTEGER, Types.VARCHAR, Types.VARCHAR, Types.VARCHAR, Types.VARCHAR};
+        	{Types.INTEGER, Types.VARCHAR, Types.VARCHAR, Types.VARCHAR, Types.VARCHAR, Types.SMALLINT, Types.SMALLINT };
         dataAccessSS.insertWithinTransaction(this);
     }
     

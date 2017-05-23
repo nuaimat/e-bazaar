@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.logging.Logger;
 
 /**
@@ -69,6 +70,8 @@ public class LogInController extends HttpServlet {
 		} catch(UserException | BackendException e) {
 			loginSuccessful = false;
 			LOG.warning(e.getMessage());
+			response.sendRedirect(request.getContextPath() + "/login?msg=" + URLEncoder.encode(e.getMessage()));
+			return;
 		}
 
 		if(loginSuccessful){

@@ -109,4 +109,22 @@ public class AddressImpl implements Address{
 		setIsBillingAddress(b);
 		
 	}
+
+    public String getOneLineRepresentation() {
+        return String.format("%s - %s - %s %s",
+                this.getStreet(),
+                this.getCity(),
+                this.getState(),
+                this.getZip()
+        ).replaceAll("\n", "");
+    }
+
+    public String getMultiLineRepresentation() {
+        return String.format("%s\n%s\n%s %s",
+                this.getStreet(),
+                this.getCity(),
+                this.getState(),
+                this.getZip()
+        );
+    }
 }

@@ -32,6 +32,9 @@ public class CreditCardImpl implements CreditCard {
 
  
     public String getCardType() {
+        if(cardType.equals("MasterCard")){
+            return "Master Card";
+        }
         return cardType;
     }
 

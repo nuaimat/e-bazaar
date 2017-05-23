@@ -187,3 +187,10 @@ h2 {
 button i {
     pointer-events: none;
 }
+.mg10 {
+    margin: 10px;
+}
+
+.pdr10 {
+    padding-right: 10px;
+}
