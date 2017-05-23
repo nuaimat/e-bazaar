@@ -2,7 +2,6 @@ package daotests;
 
 import alltests.AllTests;
 import business.externalinterfaces.*;
-import business.productsubsystem.CatalogImpl;
 import business.productsubsystem.ProductImpl;
 import business.productsubsystem.ProductSubsystemFacade;
 import business.util.Convert;
