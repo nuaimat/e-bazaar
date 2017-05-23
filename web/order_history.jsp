@@ -16,6 +16,12 @@
                 <h1>e-Bazaar</h1>
                 <p>Order History</p>
             </div>
+            <c:if test="${not empty param.msg}">
+                <div class="alert alert-success alert-dismissable">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        ${param.msg}
+                </div>
+            </c:if>
             <table id="order_history" class="table table-hover">
                 <thead>
                 <tr>

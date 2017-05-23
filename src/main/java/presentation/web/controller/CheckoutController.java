@@ -6,7 +6,7 @@ import business.exceptions.BusinessException;
 import business.exceptions.RuleException;
 import business.externalinterfaces.*;
 import business.productsubsystem.ProductSubsystemFacade;
-import jdk.nashorn.internal.ir.debug.JSONWriter;
+import presentation.data.BrowseSelectData;
 import presentation.data.CheckoutData;
 import presentation.data.ErrorMessages;
 import presentation.data.SessionCache;
@@ -61,14 +61,17 @@ public class CheckoutController extends HttpServlet {
         }
         switch (method){
             case "show_payment":
-                boolean success = saveAddresses(request, response);
-                if(success) {
+                if(saveAddresses(request, response)) {
                     response.sendRedirect(request.getContextPath() + "/secure_checkout?method=show-payment");
                 }
                 break;
             case "submitPayment":
                 // save payment data
-                // display final review
+                if(savePaymentInfo(request, response)){
+                    // display final review
+                    response.sendRedirect(request.getContextPath() + "/secure_checkout?method=final-review");
+                }
+
 
                 break;
         }
@@ -80,6 +83,32 @@ public class CheckoutController extends HttpServlet {
             showShoppingBillingPage(request, response);
         }*/
 
+    }
+
+    private boolean savePaymentInfo(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        CustomerSubsystemFacade cust = WebSession.INSTANCE.getCustomer(request.getSession());
+
+        String nameOnCard = request.getParameter("name");
+        String expDate = request.getParameter("expdate");
+        String cardNum = request.getParameter("cardnumber");
+        String cardType = request.getParameter("cardtype");
+
+        CreditCard cc = CustomerSubsystemFacade.createCreditCard(nameOnCard, expDate, cardNum, cardType);
+        business.usecasecontrol.CheckoutController controller = new business.usecasecontrol.CheckoutController();
+
+        try {
+            controller.runPaymentRules(cust.getShoppingCart().getLiveCart().getBillingAddress(), cc);
+        } catch(RuleException e) {
+            response.sendRedirect(request.getContextPath() + "/secure_checkout?method=show-payment&errormsg="+ URLEncoder.encode(e.getMessage(),"UTF-8"));
+            return false;
+        } catch(BusinessException e) {
+            response.sendRedirect(request.getContextPath() + "/secure_checkout?method=show-payment&errormsg="+ URLEncoder.encode(e.getMessage(),"UTF-8"));
+            return false;
+        }
+
+        cust.getShoppingCart().setPaymentInfo(cc); // save in the shopping cart
+
+        return true;
     }
 
     private void showPayment(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -232,6 +261,16 @@ public class CheckoutController extends HttpServlet {
             case "show-payment":
                 showPayment(request, response);
                 break;
+            case "final-review":
+                showFinalReview(request, response);
+                break;
+            case "submit_order":
+                if(submitOrder(request, response)){
+                    // redirect to home page
+                    response.sendRedirect(request.getContextPath() + "/order_history?msg=" +
+                            URLEncoder.encode("Order Successfully submitted", "UTF-8"));
+                }
+                break;
             case "show-sb":
             default:
                 if(!WebSession.INSTANCE.isLoggedIn(request.getSession())){
@@ -245,18 +284,66 @@ public class CheckoutController extends HttpServlet {
 
     }
 
-    private void showShoppingBillingPage(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    private boolean submitOrder(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        // submit order
         HttpSession session = request.getSession();
         session.getAttribute(SessionCache.SHOP_CART);
         ShoppingCartSubsystem cachedCart
                 = (ShoppingCartSubsystem)session.getAttribute(SessionCache.SHOP_CART);
 
-        CustomerSubsystem customerSubsystem = WebSession.INSTANCE.getCustomer(session);
+
+        ProductSubsystem pss = new ProductSubsystemFacade();
+
+        boolean rulesOk = true;
+        business.usecasecontrol.CheckoutController controller = new business.usecasecontrol.CheckoutController();
+
+        try {
+            controller.runFinalOrderRules(cachedCart);
+        } catch (BusinessException e) {
+            rulesOk = false;
+            LOG.warning(e.getMessage());
+            response.sendRedirect(request.getContextPath() + "/secure_checkout?method=show-payment&errormsg="+ URLEncoder.encode(e.getMessage(),"UTF-8"));
+            return false;
+        }
+
+        if(rulesOk){
+            try {
+                controller.submitFinalOrder();
+            } catch (BackendException e) {
+                LOG.warning(e.getMessage());
+                e.printStackTrace();
+                response.sendRedirect(request.getContextPath() + "/secure_checkout?method=show-payment&errormsg="+ URLEncoder.encode(e.getMessage(),"UTF-8"));
+                return false;
+            }
+
+        } else {
+            LOG.warning("Final order rules failed.");
+            response.sendRedirect(request.getContextPath() + "/secure_checkout?method=show-payment&errormsg="+ URLEncoder.encode("Final order rules failed.","UTF-8"));
+            return false;
+        }
+
+        return true;
+    }
+
+    private void showFinalReview(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        ShoppingCartSubsystem cachedCart
+                = (ShoppingCartSubsystem)session.getAttribute(SessionCache.SHOP_CART);
 
 
         ProductSubsystem pss = new ProductSubsystemFacade();
 
 
+        Map<Integer, Double> prod_price = getProductPrices(cachedCart, pss);
+
+
+        request.setAttribute("cart_items", cachedCart.getCartItems());
+        request.setAttribute("prod_price", prod_price);
+        request.getRequestDispatcher("/final_review.jsp").forward(request, response);
+
+    }
+
+    private Map<Integer, Double> getProductPrices(ShoppingCartSubsystem cachedCart, ProductSubsystem pss) {
         Map<Integer, Double> prod_price = new HashMap<>();
         if(cachedCart.getCartItems() != null){
             prod_price = cachedCart.getCartItems()
@@ -272,6 +359,22 @@ public class CheckoutController extends HttpServlet {
                     })
                     .collect(Collectors.toMap(p -> p.getProductId(), p -> p.getUnitPrice()));
         }
+        return prod_price;
+    }
+
+    private void showShoppingBillingPage(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        HttpSession session = request.getSession();
+        session.getAttribute(SessionCache.SHOP_CART);
+        ShoppingCartSubsystem cachedCart
+                = (ShoppingCartSubsystem)session.getAttribute(SessionCache.SHOP_CART);
+
+        CustomerSubsystem customerSubsystem = WebSession.INSTANCE.getCustomer(session);
+
+
+        ProductSubsystem pss = new ProductSubsystemFacade();
+
+
+        Map<Integer, Double> prod_price = getProductPrices(cachedCart, pss);
 
 
         request.setAttribute("cart_items", cachedCart.getCartItems());

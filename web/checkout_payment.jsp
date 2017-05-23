@@ -82,7 +82,7 @@
                     <h4>Payment details: </h4>
                 </div>
                 <div style="padding:40px 50px;">
-                    <form role="form" id="payment" method="post">
+                    <form role="form" id="payment" method="post" action="<c:url value="/secure_checkout" />">
                         <input type="hidden" name="method" value="submitPayment">
                         <div class="form-group">
                             <label for="name">Name on Card</label>
@@ -112,7 +112,7 @@
                         </div>
                         <div class="form-group">
                             <label for="expdate">Expiration Date</label>
-                            <input type="text" class="form-control" id="expdate" placeholder="mm/dd/yyyy"
+                            <input type="text" name="expdate" class="form-control" id="expdate" placeholder="mm/dd/yyyy"
                                    value="${cc.expirationDate}">
                         </div>
                     </form>
