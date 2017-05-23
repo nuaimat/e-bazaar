@@ -442,4 +442,10 @@ class DbClassShoppingCart implements DbClass, DbClassShoppingCartForTest {
 		saveCart(custProfile, cart);
 		return cart.getCartItems().get(0).getCartid();
 	}
+
+	@Override
+	public Integer RetrieveSavedCartTest(CustomerProfile custProfile) throws DatabaseException {
+		ShoppingCartImpl cart= retrieveSavedCart(custProfile);
+		return cart.getCartItems().get(0).getCartid();
+	}
 }
