@@ -10,7 +10,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import business.exceptions.BackendException;
 import business.externalinterfaces.*;
+import business.productsubsystem.ProductSubsystemFacade;
 import business.util.Convert;
 import middleware.DbConfigProperties;
 import middleware.dataaccess.DataAccessSubsystemFacade;
@@ -83,6 +85,7 @@ class DbClassOrder implements DbClass, DbClassOrderForTest {
 		dataAccessSS.startTransaction();
 		this.order = order;
 		this.custProfile = custProfile;
+		ProductSubsystem productSubsystem = new ProductSubsystemFacade();
 
 		int orderId = submitOrderData();
 		order.setOrderId(orderId);
@@ -90,7 +93,15 @@ class DbClassOrder implements DbClass, DbClassOrderForTest {
 		for(OrderItem orderItem:order.getOrderItems()){
 			orderItem.setOrderId(order.getOrderId());
 			submitOrderItem(orderItem);
+			try {
+				productSubsystem.decreaseQuantity(orderItem.getProductId(), orderItem.getQuantity());
+			} catch (BackendException e) {
+				LOG.warning(e.getMessage());
+				continue;
+			}
+
 		}
+
 
 		dataAccessSS.commit();
 		dataAccessSS.releaseConnection();

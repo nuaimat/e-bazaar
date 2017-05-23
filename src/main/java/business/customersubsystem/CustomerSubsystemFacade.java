@@ -270,6 +270,7 @@ public class CustomerSubsystemFacade implements CustomerSubsystem {
 	public void submitOrder() throws BackendException {
 		orderSubsystem.submitOrder(this.getShoppingCart().getLiveCart());
 		this.getShoppingCart().setCartItems(new ArrayList<>()); // empty cart items
+		this.getShoppingCart().getLiveCart().setCartItems(new ArrayList<>());
 	}
 
 	@Override

@@ -347,6 +347,13 @@ public class BrowseSelectController extends HttpServlet {
             Catalog selectedCatalog = getCatalogById(Integer.parseInt(selectedCategoryId), catList);
             try {
                 List<Product> selectedProducts = pss.getProductList(selectedCatalog);
+                // remove items with 0 quantity
+                selectedProducts = selectedProducts
+                        .stream()
+                        .filter( p -> p.getQuantityAvail() > 0)
+                        .collect(Collectors.toList());
+
+
                 request.setAttribute("product_list", selectedProducts);
             } catch (BackendException e) {
                 LOG.warning(e.getMessage());

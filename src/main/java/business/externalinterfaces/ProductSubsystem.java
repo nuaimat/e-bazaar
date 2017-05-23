@@ -43,4 +43,6 @@ public interface ProductSubsystem {
 	void updateCatalog(Catalog cat) throws BackendException;
 
 	void updateProduct(Product p) throws BackendException;
+
+	void decreaseQuantity(int productId, int quantity) throws BackendException;
 }

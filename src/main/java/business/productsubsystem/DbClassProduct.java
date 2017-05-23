@@ -32,7 +32,8 @@ class DbClassProduct implements DbClass, DbClassProductForTest {
 	}
 
 
-	enum Type {LOAD_PROD_TABLE, READ_PRODUCT, READ_PROD_LIST, SAVE_NEW_PROD, DELETE_PRODUCT, UPDATE_PRODUCT};
+	enum Type {LOAD_PROD_TABLE, READ_PRODUCT, READ_PROD_LIST, SAVE_NEW_PROD, DELETE_PRODUCT,
+		UPDATE_PRODUCT, DECREASE_QUANTITY};
 
 	private static final Logger LOG = Logger.getLogger(DbClassProduct.class
 			.getPackage().getName());
@@ -49,11 +50,13 @@ class DbClassProduct implements DbClass, DbClassProductForTest {
 	private String updateProductQuery = "update Product set catalogid=?, productname=?, totalquantity=?," +
 			"priceperunit=?, mfgdate=?, description=? " +
 			"WHERE productid = ?";
+	private String decreaseQuantityQuery = "update Product set totalquantity = totalquantity - ? " +
+			"WHERE productid = ?";
 
 	private Object[] loadProdTableParams, readProductParams, 
-		readProdListParams, saveNewProdParams, deleteProductParams, updateProductParams;
+		readProdListParams, saveNewProdParams, deleteProductParams, updateProductParams, decreaseQuantityParams;
 	private int[] loadProdTableTypes, readProductTypes, readProdListTypes, 
-	    saveNewProdTypes, deleteProductTypes, updateProductTypes;
+	    saveNewProdTypes, deleteProductTypes, updateProductTypes, decreaseQuantityTypes;
 	
 	/**
 	 * The productTable matches product ID and product name with
@@ -126,6 +129,15 @@ class DbClassProduct implements DbClass, DbClassProductForTest {
 		dataAccessSS.deleteWithinTransaction(this);
 		return product;
 	}
+
+	public Product decreaseProductQuantity(Integer productId, Integer delta)
+			throws DatabaseException {
+		queryType = Type.DECREASE_QUANTITY;
+		decreaseQuantityParams = new Object[] {delta, productId};
+		decreaseQuantityTypes = new int[] {Types.INTEGER, Types.INTEGER};
+		dataAccessSS.updateWithinTransaction(this);
+		return product;
+	}
 	
 
 	/**
@@ -171,6 +183,8 @@ class DbClassProduct implements DbClass, DbClassProductForTest {
 				return deleteProductQuery;
 			case UPDATE_PRODUCT:
 				return updateProductQuery;
+			case DECREASE_QUANTITY:
+				return decreaseQuantityQuery;
 			default:
 				return null;
 		}
@@ -191,6 +205,8 @@ class DbClassProduct implements DbClass, DbClassProductForTest {
 				return deleteProductParams;
 			case UPDATE_PRODUCT:
 				return updateProductParams;
+			case DECREASE_QUANTITY:
+				return decreaseQuantityParams;
 			default:
 				return null;
 		}
@@ -211,6 +227,8 @@ class DbClassProduct implements DbClass, DbClassProductForTest {
 			return deleteProductTypes;
 		case UPDATE_PRODUCT:
 				return updateProductTypes;
+		case DECREASE_QUANTITY:
+			return decreaseQuantityTypes;
 		default:
 			return null;
 	}

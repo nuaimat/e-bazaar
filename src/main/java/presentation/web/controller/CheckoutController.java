@@ -75,14 +75,6 @@ public class CheckoutController extends HttpServlet {
 
                 break;
         }
-
-        /*if(!WebSession.INSTANCE.isLoggedIn(request.getSession())){
-            response.sendRedirect(request.getContextPath() + "/secure_checkout");
-            return;
-        } else {
-            showShoppingBillingPage(request, response);
-        }*/
-
     }
 
     private boolean savePaymentInfo(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -290,9 +282,6 @@ public class CheckoutController extends HttpServlet {
         session.getAttribute(SessionCache.SHOP_CART);
         ShoppingCartSubsystem cachedCart
                 = (ShoppingCartSubsystem)session.getAttribute(SessionCache.SHOP_CART);
-
-
-        ProductSubsystem pss = new ProductSubsystemFacade();
 
         boolean rulesOk = true;
         business.usecasecontrol.CheckoutController controller = new business.usecasecontrol.CheckoutController();

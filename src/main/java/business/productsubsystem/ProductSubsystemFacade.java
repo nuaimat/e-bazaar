@@ -183,5 +183,16 @@ public class ProductSubsystemFacade implements ProductSubsystem {
 		}
 	}
 
+	@Override
+	public void decreaseQuantity(int productId, int quantity) throws BackendException {
+		try {
+			DbClassProduct dbclass = new DbClassProduct();
+			dbclass.decreaseProductQuantity(productId, quantity);
+			return;
+		} catch(DatabaseException e) {
+			throw new BackendException(e);
+		}
+	}
+
 
 }
