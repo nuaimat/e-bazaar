@@ -2,7 +2,6 @@ package presentation.web.controller;
 
 import business.exceptions.BackendException;
 import business.externalinterfaces.*;
-import business.productsubsystem.ProductImpl;
 import business.productsubsystem.ProductSubsystemFacade;
 import business.rulesubsystem.RulesSubsystemFacade;
 import business.util.Convert;
@@ -166,7 +165,8 @@ public class BrowseSelectController extends HttpServlet {
         LocalDate md = Convert.localDateForString(request.getParameter("mfg_date"));
 
 
-        ProductImpl p2 = new ProductImpl(cat, pid, prodName, qa, up, md, desc);
+
+        Product p2 = ProductSubsystemFacade.createProduct(cat, pid, prodName, qa, up, md, desc);
         try {
             pss.updateProduct(p2);
         } catch (BackendException e) {
@@ -193,7 +193,8 @@ public class BrowseSelectController extends HttpServlet {
         LocalDate md = Convert.localDateForString(request.getParameter("mfg_date"));
 
 
-        ProductImpl p2 = new ProductImpl(cat, null, prodName, qa, up, md, desc);
+        Product p2 = ProductSubsystemFacade.createProduct(cat, null, prodName, qa, up, md, desc);
+
         try {
             pss.saveNewProduct(p2, cat);
         } catch (BackendException e) {

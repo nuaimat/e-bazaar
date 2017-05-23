@@ -8,7 +8,7 @@ import business.externalinterfaces.*;
 import business.util.Convert;
 import javafx.beans.property.*;
 
-public class ProductImpl implements Product {
+class ProductImpl implements Product {
 	private String productName;
     private int productId;     
 	private int quantityAvail; 

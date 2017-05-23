@@ -3,7 +3,6 @@ package presentation.web.controller;
 import business.exceptions.BackendException;
 import business.exceptions.BusinessException;
 import business.externalinterfaces.*;
-import business.productsubsystem.ProductImpl;
 import business.productsubsystem.ProductSubsystemFacade;
 import business.shoppingcartsubsystem.ShoppingCartSubsystemFacade;
 import business.usecasecontrol.BrowseAndSelectController;

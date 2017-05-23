@@ -2,7 +2,6 @@ package daotests;
 
 import alltests.AllTests;
 import business.externalinterfaces.*;
-import business.productsubsystem.ProductImpl;
 import business.productsubsystem.ProductSubsystemFacade;
 import business.util.Convert;
 import dbsetup.DbQueries;
@@ -25,7 +24,7 @@ public class DbClassProductTest extends TestCase {
 		Catalog c = new MockCatalog();
 		c.setId(1); //this might break
 
-		Product product = new ProductImpl(c, 0, "Test Product", 15, 15.0,
+		Product product = ProductSubsystemFacade.createProduct(c, 0, "Test Product", 15, 15.0,
 				Convert.localDateForString("10/21/2016"), "");
 		Integer prodId = -1;
 		try{

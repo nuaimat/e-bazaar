@@ -2,7 +2,6 @@
 package business.externalinterfaces;
 import java.util.List;
 import business.exceptions.BackendException;
-import business.productsubsystem.ProductImpl;
 
 public interface ProductSubsystem {
 
