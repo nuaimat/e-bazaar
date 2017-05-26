@@ -141,8 +141,6 @@ class DbClassOrder implements DbClass, DbClassOrderForTest {
 	/** This is part of the general submitOrder method */
 	private void submitOrderItem(OrderItem item) throws DatabaseException {
         queryType=Type.SUBMIT_ORDER_ITEM;
-        LOG.warning("Method submitOrderItem(OrderItem item) in DbClassOrder has not been implemented.");
-
 
         submitOrderItemParams = new Object[]{
 				item.getOrderId(),
