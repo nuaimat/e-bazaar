@@ -13,6 +13,7 @@ services:
     command: mysqld --user=root --verbose
     volumes:
         - ./otherfiles/ebazaar_data.sql:/docker-entrypoint-initdb.d/ebazaar_data.sql
+        - ./otherfiles/mysql_caseinsensitive.cnf:/etc/mysql/conf.d/mysql_caseinsensitive.cnf
     ports:
         - "3306:3306"
     environment:
