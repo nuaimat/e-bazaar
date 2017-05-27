@@ -6,7 +6,7 @@ This Project has two presentation components:
   - Web App
 
 
-Prerequiset
+Prerequisite
   - install docker and docker-compose
 
 To get Started
