@@ -74,6 +74,13 @@
             <artifactId>gson</artifactId>
             <version>2.3.1</version>
         </dependency>
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>javafx</artifactId>
+            <version>2.2.3</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/jfxrt.jar</systemPath>
+        </dependency>
 
 
     </dependencies>
@@ -95,6 +102,17 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <configuration>
                     <failOnMissingWebXml>true</failOnMissingWebXml>
+                    <webResources>
+                        <resource>
+                            <directory>lib</directory>
+                            <targetPath>WEB-INF/lib</targetPath>
+                            <includes>
+                                <!-- this plugin is added to get sure all dependent jar files are
+                                actually there in the generated war -->
+                                <include>**/*.jar</include>
+                            </includes>
+                        </resource>
+                    </webResources>
                 </configuration>
             </plugin>
             <plugin>
@@ -114,10 +132,22 @@
                                     <type>${project.packaging}</type>
                                     <overWrite>true</overWrite>
                                     <outputDirectory>docker-dir/</outputDirectory>
-                                    <destFileName>e-bazaar.war</destFileName>
+                                    <destFileName>e-bazaar_war.war</destFileName>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>
